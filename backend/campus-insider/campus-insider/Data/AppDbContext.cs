@@ -1,6 +1,6 @@
 ﻿namespace campus_insider.Data
 {
-    using campus_insider.DTOs;
+    using campus_insider.Models;
     using Microsoft.EntityFrameworkCore;
 
     public class AppDbContext : DbContext
@@ -10,11 +10,11 @@
         {
         }
 
-        public DbSet<UserDto> Users => Set<UserDto>();
-        public DbSet<CarpoolTripDto> CarpoolTrips => Set<CarpoolTripDto>();
-        public DbSet<EquipmentDto> Equipment => Set<EquipmentDto>();
-        public DbSet<LoanDto> Loans => Set<LoanDto>();
-        public DbSet<NotificationDto> Notifications => Set<NotificationDto>();
+        public DbSet<User> Users => Set<User>();
+        public DbSet<CarpoolTrip> CarpoolTrips => Set<CarpoolTrip>();
+        public DbSet<Equipment> Equipment => Set<Equipment>();
+        public DbSet<Loan> Loans => Set<Loan>();
+        public DbSet<Notification> Notifications => Set<Notification>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -23,7 +23,7 @@
             // =========================================================
             // Users
             // =========================================================
-            modelBuilder.Entity<UserDto>(entity =>
+            modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("users");
 
@@ -69,7 +69,7 @@
             // =========================================================
             // Carpool Trips
             // =========================================================
-            modelBuilder.Entity<CarpoolTripDto>(entity =>
+            modelBuilder.Entity<CarpoolTrip >(entity =>
             {
                 entity.ToTable("carpool_trips");
 
@@ -107,7 +107,7 @@
             // =========================================================
             // Equipment
             // =========================================================
-            modelBuilder.Entity<EquipmentDto>(entity =>
+            modelBuilder.Entity<Equipment >(entity =>
             {
                 entity.ToTable("equipment");
 
@@ -141,7 +141,7 @@
             // =========================================================
             // Loans
             // =========================================================
-            modelBuilder.Entity<LoanDto>(entity =>
+            modelBuilder.Entity<Loan>(entity =>
             {
                 entity.ToTable("loans");
 
@@ -181,7 +181,7 @@
             // =========================================================
             // Notifications
             // =========================================================
-            modelBuilder.Entity<NotificationDto>(entity =>
+            modelBuilder.Entity<Notification >(entity =>
             {
                 entity.ToTable("notifications");
 
