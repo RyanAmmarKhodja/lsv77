@@ -14,18 +14,23 @@ namespace campus_insider.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IConfiguration _config;
-        public AuthController(IConfiguration config) => _config = config;
-
         private readonly UserService _userService;
 
-        public AuthController(UserService userService)
+        public AuthController(IConfiguration config, UserService userService)
         {
+            _config = config;
             _userService = userService;
         }
+
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto login)
         {
+            if (!login.Email.EndsWith("@lycee-rene-cassin.fr")) // Ensure you include the .fr or .com
+            {
+                return BadRequest("Only school emails are permitted.");
+            }
+
             var user = await _userService.GetByLogin(login);
 
             // Replace this with your actual user validation logic (e.g., check DB)

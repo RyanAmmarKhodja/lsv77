@@ -1,5 +1,21 @@
 [
   {
+    "ContainingType": "campus_insider.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "login",
+        "Type": "campus_insider.DTOs.LoginDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "campus_insider.Controllers.EquipmentController",
     "Method": "GetEquipment",
     "RelativePath": "api/equipment",

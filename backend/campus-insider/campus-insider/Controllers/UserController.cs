@@ -1,6 +1,7 @@
 ﻿using campus_insider.DTOs;
 using campus_insider.Models;
 using campus_insider.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -17,6 +18,9 @@ namespace campus_insider.Controllers
             _userService = userService;
         }
 
+
+
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<UserResponseDto>> GetUserById(long id)
         {
@@ -37,6 +41,7 @@ namespace campus_insider.Controllers
         }
 
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<List<UserResponseDto>>> GetUsers()
         {
@@ -82,6 +87,7 @@ namespace campus_insider.Controllers
 
 
 
+        [Authorize]
         [HttpPut]
         public async Task<ActionResult<UserUpdateDto>> Update([FromBody] UserUpdateDto userDto)
         {
