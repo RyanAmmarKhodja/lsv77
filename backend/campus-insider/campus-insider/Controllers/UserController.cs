@@ -63,7 +63,11 @@ namespace campus_insider.Controllers
         public async Task<ActionResult<UserResponseDto>> Create(
        [FromBody] UserCreateDto userDto)
         {
-            //  normally OwnerId comes from auth (JWT)
+            if (!userDto.Email.EndsWith("@lycee-rene-cassin.fr")) // Ensure you include the .fr or .com
+            {
+                return BadRequest("Only school emails are permitted.");
+            }
+
             var user = new User
             {
                 FirstName = userDto.FirstName,
@@ -102,8 +106,8 @@ namespace campus_insider.Controllers
                     Password = userDto.Password,
                     Email = userDto.Email
                 };
-                
-                
+
+
                 await _userService.UpdateAsync(user);
 
                 return Ok(true);

@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using campus_insider.DTOs;
+using campus_insider.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using campus_insider.DTOs;
-using campus_insider.Services;
 using System.Threading.Tasks;
 
 namespace campus_insider.Controllers
@@ -22,18 +23,18 @@ namespace campus_insider.Controllers
             _userService = userService;
         }
 
-
+        [EnableRateLimiting("login-policy")]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto login)
         {
-            if (!login.Email.EndsWith("@lycee-rene-cassin.fr")) // Ensure you include the .fr or .com
+            if (!login.Email.EndsWith("@lycee-rene-cassin.fr")) 
             {
                 return BadRequest("Only school emails are permitted.");
             }
 
             var user = await _userService.GetByLogin(login);
 
-            // Replace this with your actual user validation logic (e.g., check DB)
+            
             // 2. Simple string comparison (WARNING: Temporary only!)
             if (user == null || user.Password != login.Password)
             {
@@ -45,7 +46,6 @@ namespace campus_insider.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), // This is the 'userId'
                 new Claim(ClaimTypes.Email, user.Email),                  // This is the 'email'
-                new Claim("FavoriteColor", "Blue")                        // You can even make custom claims!
             };
 
             // 4. Create the Token
