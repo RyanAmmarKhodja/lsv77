@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.InteropServices;
+using System.Security.Claims;
 
 namespace campus_insider.Controllers
 {
@@ -63,13 +64,15 @@ namespace campus_insider.Controllers
         public async Task<ActionResult<EquipmentResponseDto>> Create(
        [FromBody] EquipmentCreateDto dto)
         {
-            //  normally OwnerId comes from auth (JWT)
+            var OwnerIdString = long.TryParse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value, out long ownerId);
+
+
             var equipment = new Equipment
             {
                 Name = dto.Name,
                 Category = dto.Category,
                 Description = dto.Description,
-                OwnerId = 1 // TEMP: replace with User.Identity
+                OwnerId = ownerId
             };
 
             var created = await _equipmentService.ShareEquipment(equipment);
