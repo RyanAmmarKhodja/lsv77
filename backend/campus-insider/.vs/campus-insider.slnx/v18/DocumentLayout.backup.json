@@ -59,8 +59,7 @@
               "ViewState": "AgIAACMAAAAAAAAAAAAYwDsAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-05T22:07:56.471Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -98,8 +97,7 @@
               "RelativeToolTip": "campus-insider\\Controllers\\UserController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAEUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-06T10:09:59.364Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-06T10:09:59.364Z"
             },
             {
               "$type": "Document",
@@ -109,7 +107,7 @@
               "RelativeDocumentMoniker": "campus-insider\\Program.cs",
               "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Program.cs",
               "RelativeToolTip": "campus-insider\\Program.cs",
-              "ViewState": "AgIAAB8AAAAAAAAAAAAAACcAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAAAC4AAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-05T22:03:26.951Z",
               "EditorCaption": ""

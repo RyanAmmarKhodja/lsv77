@@ -2,9 +2,9 @@
 {
     public class LoanDto
     {
-        public int Id { get; set; }
-        public EquipmentResponseDto Equipment { get; set; }
-        public UserResponseDto Borrower { get; set; }
+        public long Id { get; set; }
+        public long EquipmentId { get; set; }
+        public long BorrowerId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Status { get; set; }
