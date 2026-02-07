@@ -2,6 +2,7 @@
 using campus_insider.DTOs;
 using campus_insider.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace campus_insider.Services
 {
@@ -22,7 +23,7 @@ namespace campus_insider.Services
                 .ToListAsync();
         }
 
-        public async Task<LoanDto> GetLoanById(int id)
+        public async Task<LoanDto> GetLoanById(long id)
         {
             var loan = await _context.Loans.FindAsync(id);
             return loan == null ? null : MapToDto(loan);
@@ -39,7 +40,7 @@ namespace campus_insider.Services
         }
 
         // --- Specific Methods ---
-
+        // ALL USERS ACTIONS
         public async Task RequestLoan(LoanDto request)
         {
             var loan = new Loan
@@ -55,28 +56,8 @@ namespace campus_insider.Services
             _context.Loans.Add(loan);
             await _context.SaveChangesAsync();
         }
-        public async Task RejectLoan(int loanId)
-        {
-            var loan = await _context.Loans.FindAsync(loanId);
-            if (loan == null) return;
 
-            // Decision: Keep in DB as DENIED for audit trail/history purposes
-            loan.Status = "DENIED";
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task ApproveLoan(int loanId)
-        {
-            var loan = await _context.Loans.FindAsync(loanId);
-            if (loan == null) return;
-
-            loan.Status = "APPROVED";
-
-            // Logical addition: Mark the equipment as unavailable or handle concurrency here
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task CancelLoan(int loanId)
+        public async Task CancelLoan(long loanId)
         {
             var loan = await _context.Loans.FindAsync(loanId);
             if (loan == null) return;
@@ -88,7 +69,6 @@ namespace campus_insider.Services
                 await _context.SaveChangesAsync();
             }
         }
-
         public async Task<bool> ExtendLoan(int loanId, DateTime newEndDate)
         {
             var loan = await _context.Loans.Include(l => l.Equipment).FirstOrDefaultAsync(l => l.Id == loanId);
@@ -111,7 +91,7 @@ namespace campus_insider.Services
             return true;
         }
 
-        public async Task CompleteLoan(int loanId)
+        public async Task CompleteLoan(long loanId)
         {
             var loan = await _context.Loans.FindAsync(loanId);
             if (loan == null) return;
@@ -122,15 +102,6 @@ namespace campus_insider.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<LoanDto>> GetPendingLoans()
-        {
-            return await _context.Loans
-                .Where(l => l.Status == "PENDING")
-                .AsNoTracking()
-                .Select(l => MapToDto(l))
-                .ToListAsync();
-        }
-
         public async Task<List<LoanDto>> GetOngoingLoans()
         {
             var now = DateTime.UtcNow;
@@ -139,6 +110,137 @@ namespace campus_insider.Services
                 .AsNoTracking()
                 .Select(l => MapToDto(l))
                 .ToListAsync();
+        }
+
+        public async Task<List<LoanDto>> GetLoansByEquipment(long equipmentId)
+        {
+            return await _context.Loans
+                .Where(l => l.EquipmentId == equipmentId)
+                .AsNoTracking()
+                .Select(l => MapToDto(l))
+                .ToListAsync();
+        }
+
+        public async Task<List<LoanDto>> GetLoansByStatus(string status)
+        {
+            return await _context.Loans
+                .Where(l => l.Status == status)
+                .AsNoTracking()
+                .Select(l => MapToDto(l))
+                .ToListAsync();
+        }
+
+
+        // USER ACTIONS
+        public async Task<List<LoanDto>> GetAllUserLoans(long userId)
+        {
+            return await _context.Loans
+                .Where(l => l.BorrowerId == userId)
+                .AsNoTracking()
+                .Select(l => MapToDto(l))
+                .ToListAsync();
+        }
+
+        public async Task<List<LoanDto>> GetUserLoansByStatus(long userId, string status)
+        {
+            return await _context.Loans
+                .Where(l => l.BorrowerId == userId && l.Status == status)
+                .AsNoTracking()
+                .Select(l => MapToDto(l))
+                .ToListAsync();
+        }
+
+        public async Task<List<LoanDto>> GetUserOverdueLoans(long userId)
+        {
+            var now = DateTime.UtcNow;
+            return await _context.Loans
+                .Where(l => l.BorrowerId == userId && l.Status == "APPROVED" && l.EndDate < now)
+                .AsNoTracking()
+                .Select(l => MapToDto(l))
+                .ToListAsync();
+        }
+
+
+        // OWNER ACTIONS
+        public async Task<List<LoanDto>> GetOwnerLoansByStatus(long userId, string status)
+        {
+            return await _context.Loans
+                .Include(l => l.Equipment)
+                .Where(l => l.Equipment.OwnerId == userId && l.Status == status)
+                .AsNoTracking()
+                .Select(l => MapToDto(l))
+                .ToListAsync();
+        }
+
+        public async Task<List<LoanDto>> GetOwnerOngoingLoans(long userId)
+        {
+            var now = DateTime.UtcNow;
+            return await _context.Loans
+                .Include(l => l.Equipment)
+                .Where(l => l.Equipment.OwnerId == userId && l.Status == "APPROVED" && l.StartDate <= now && l.EndDate >= now)
+                .AsNoTracking()
+                .Select(l => MapToDto(l))
+                .ToListAsync();
+        }
+
+        public async Task<List<LoanDto>> GetOwnerOverdueLoans(long userId)
+        {
+            var now = DateTime.UtcNow;
+            return await _context.Loans
+                .Include(l => l.Equipment)
+                .Where(l => l.Equipment.OwnerId == userId && l.Status == "APPROVED" && l.EndDate < now)
+                .AsNoTracking()
+                .Select(l => MapToDto(l))
+                .ToListAsync();
+        }
+
+        public async Task RejectLoan(long loanId)
+        {
+            var loan = await _context.Loans.FindAsync(loanId);
+            if (loan == null) return;
+
+            // Decision: Keep in DB as DENIED for audit trail/history purposes
+            loan.Status = "DENIED";
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task ApproveLoan(long loanId)
+        {
+            var loan = await _context.Loans.FindAsync(loanId);
+            if (loan == null) return;
+
+            loan.Status = "APPROVED";
+
+            // Logical addition: Mark the equipment as unavailable or handle concurrency here
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task ApproveExtension(long loanId)
+        {
+            var loan = await _context.Loans.FindAsync(loanId);
+            if (loan == null || loan.Status != "EXTENSION_PENDING") return;
+            // Logic: Update the EndDate to the requested extension date and set status back to APPROVED
+            // Assuming we stored the requested extension date in a temporary field or metadata
+            // loan.EndDate = loan.RequestedExtensionDate;
+            loan.Status = "APPROVED";
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task RejectExtension(long loanId)
+        {
+            var loan = await _context.Loans.FindAsync(loanId);
+            if (loan == null || loan.Status != "EXTENSION_PENDING") return;
+            // Logic: Revert status back to APPROVED without changing EndDate
+            loan.Status = "APPROVED";
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsEquipmentOwner(long loanId, long userId)
+        {
+            var loan = await _context.Loans
+                .Include(l => l.Equipment)
+                .FirstOrDefaultAsync(l => l.Id == loanId);
+            return loan != null && loan.Equipment.OwnerId == userId;
         }
 
         private static LoanDto MapToDto(Loan loan)
