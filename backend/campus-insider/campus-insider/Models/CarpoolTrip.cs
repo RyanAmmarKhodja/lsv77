@@ -8,6 +8,7 @@
         public string Destination { get; set; } = null!;
         public DateTime DepartureTime { get; set; }
         public int AvailableSeats { get; set; }
+        public string Status { get; set; }
         public DateTime CreatedAt { get; set; }
 
         // Foreign key
