@@ -52,7 +52,7 @@ namespace campus_insider.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<EquipmentResponseDto>> GetById(long id)
         {
-            var equipment = await _equipmentService.GetByIdAsync(id);
+            var equipment = await _equipmentService.GetByEquipmentIdAsync(id);
             if (equipment == null)
                 return NotFound(new { message = "Equipment not found." });
 

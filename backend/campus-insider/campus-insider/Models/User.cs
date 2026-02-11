@@ -21,6 +21,7 @@
         public List<Loan> Loans { get; set; } = new();
         public List<CarpoolTrip> CarpoolTripsAsDriver { get; set; } = new();
         public List<CarpoolPassenger> CarpoolPassengers { get; set; } = new();
+        public List<Notification> Notifications { get; set; } = new();
     }
 
 }

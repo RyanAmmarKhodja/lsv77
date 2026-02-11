@@ -15,6 +15,7 @@ namespace campus_insider.Data
         public DbSet<Loan> Loans { get; set; }
         public DbSet<CarpoolTrip> CarpoolTrips { get; set; }
         public DbSet<CarpoolPassenger> CarpoolPassengers { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -254,6 +255,67 @@ namespace campus_insider.Data
             });
 
             #endregion
+
+            #region --- Notifications Configuration ---
+            // In AppDbContext.cs, add to OnModelCreating:
+
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.ToTable("Notifications");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.UserId)
+                    .IsRequired();
+
+                entity.Property(e => e.Type)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.Message)
+                    .IsRequired()
+                    .HasMaxLength(1000);
+
+                entity.Property(e => e.IsRead)
+                    .IsRequired()
+                    .HasDefaultValue(false);
+
+                entity.Property(e => e.CreatedAt)
+                    .IsRequired()
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.ReadAt);
+
+                entity.Property(e => e.EntityType)
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.EntityId);
+
+                entity.Property(e => e.ActionUrl)
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.ActionText)
+                    .HasMaxLength(100);
+
+                // Relationships
+                entity.HasOne(n => n.User)
+                    .WithMany(u => u.Notifications)
+                    .HasForeignKey(n => n.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Indexes for performance
+                entity.HasIndex(n => n.UserId);
+                entity.HasIndex(n => new { n.UserId, n.IsRead });
+                entity.HasIndex(n => n.CreatedAt);
+            });
+            #endregion
+
         }
     }
 }

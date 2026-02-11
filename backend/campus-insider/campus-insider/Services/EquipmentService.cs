@@ -38,7 +38,7 @@ namespace campus_insider.Services
             };
         }
 
-        public async Task<EquipmentResponseDto?> GetByIdAsync(long id)
+        public async Task<EquipmentResponseDto?> GetByEquipmentIdAsync(long id)
         {
             var equipment = await _context.Equipment.AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
             return equipment != null ? MapToResponseDto(equipment) : null;
