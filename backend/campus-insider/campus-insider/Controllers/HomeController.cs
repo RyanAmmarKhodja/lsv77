@@ -28,5 +28,12 @@ namespace campus_insider.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+        [HttpGet("test")]
+        public IActionResult Test()
+        {
+            return Ok(new { message = "API is working!" });
+        }
     }
 }

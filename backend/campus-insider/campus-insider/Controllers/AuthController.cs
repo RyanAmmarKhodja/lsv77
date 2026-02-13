@@ -1,5 +1,6 @@
 ﻿using campus_insider.DTOs;
 using campus_insider.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
@@ -86,16 +87,43 @@ namespace campus_insider.Controllers
             // This would use a separate refresh token stored in DB
             return Ok(new { message = "Refresh token endpoint - to be implemented" });
         }
+
+
+        //[HttpGet("me")]
+        //public async Task<IActionResult> GetCurrentUser()
+        //{
+        //    var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+        //    string? token = await HttpContext.GetTokenAsync("access_token");
+
+        //    if (userIdClaim == null)
+        //        return Unauthorized();
+
+        //    if (!long.TryParse(userIdClaim.Value, out var userId))
+        //        return Unauthorized();
+
+        //    var user = await _userService.GetByIdAsync(userId);
+        //    if (user == null)
+        //        return NotFound();
+        //    return Ok(new UserResponseDto
+        //    {
+        //        Id = user.Id,
+        //        FirstName = user.FirstName,
+        //        LastName = user.LastName,
+        //        Email = user.Email,
+        //        Role = user.Role,
+        //        CreatedAt = user.CreatedAt
+        //    });
+        //}
+
+        #region --- DTOs ---
+
+        public class AuthResponseDto
+        {
+            public string Token { get; set; } = string.Empty;
+            public DateTime ExpiresAt { get; set; }
+            public UserResponseDto User { get; set; } = null!;
+        }
+
+        #endregion
     }
-
-    #region --- DTOs ---
-
-    public class AuthResponseDto
-    {
-        public string Token { get; set; } = string.Empty;
-        public DateTime ExpiresAt { get; set; }
-        public UserResponseDto User { get; set; } = null!;
-    }
-
-    #endregion
 }

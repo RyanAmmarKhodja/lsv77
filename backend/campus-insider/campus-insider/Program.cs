@@ -49,24 +49,24 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<FeedService>();
 builder.Services.AddScoped<PostService>();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddRateLimiter(options =>
-{
-    options.AddFixedWindowLimiter("login-policy", opt =>
-    {
-        opt.PermitLimit = 3;
-        opt.Window = TimeSpan.FromMinutes(15);
-        opt.QueueLimit = 0;
-    }).RejectionStatusCode = 429;
+//builder.Services.AddRateLimiter(options =>
+//{
+//    options.AddFixedWindowLimiter("login-policy", opt =>
+//    {
+//        opt.PermitLimit = 3;
+//        opt.Window = TimeSpan.FromMinutes(15);
+//        opt.QueueLimit = 0;
+//    }).RejectionStatusCode = 429;
 
-    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
-    RateLimitPartition.GetFixedWindowLimiter(
-        partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? httpContext.Request.Headers.Host.ToString(),
-        factory: partition => new FixedWindowRateLimiterOptions
-        {
-            PermitLimit = 3,
-            Window = TimeSpan.FromMinutes(15)
-        }));
-});
+//    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+//    RateLimitPartition.GetFixedWindowLimiter(
+//        partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? httpContext.Request.Headers.Host.ToString(),
+//        factory: partition => new FixedWindowRateLimiterOptions
+//        {
+//            PermitLimit = 3,
+//            Window = TimeSpan.FromMinutes(15)
+//        }));
+//});
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -99,6 +99,17 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddSignalR();
 builder.Services.AddScoped<NotificationService>();
 
+// CORS Configuration
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") 
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 // 2. Enable Middleware (Order matters!)
 app.UseAuthentication();
@@ -119,7 +130,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseRateLimiter();
+app.UseCors("AllowReactApp"); 
+//app.UseRateLimiter();
 app.UseAuthorization();
 app.MapHub<NotificationHub>("/hubs/notifications");
 app.MapControllerRoute(
