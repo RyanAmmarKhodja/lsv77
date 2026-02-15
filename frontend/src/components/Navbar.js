@@ -1,5 +1,16 @@
-import React from 'react';
-import { Search, MessageCircle, Car, Package, Home, PlusSquare } from 'lucide-react';
+import React from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import {
+  Search,
+  MessageCircle,
+  Car,
+  Package,
+  Home,
+  PlusSquare,
+} from "lucide-react";
+import Equipment from "../pages/Equipment";
+import Covoiturages from "../pages/CoRide";
+//import Home from "../pages/Home";
 
 const Navbar = () => {
   return (
@@ -7,11 +18,10 @@ const Navbar = () => {
       {/* Upper Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 gap-8">
-          
           {/* 1. Logo */}
           <div className="flex-shrink-0 flex items-center">
             <span className="text-2xl font-black text-[#F56B2A] tracking-tighter cursor-pointer">
-              CampusInsider
+              <NavLink to="/">CampusInsider</NavLink>
             </span>
           </div>
 
@@ -29,10 +39,22 @@ const Navbar = () => {
 
           {/* 3. Navigation Links */}
           <div className="hidden lg:flex items-center space-x-1">
-            <NavLink icon={<Home size={20}/>} label="Accueil" />
-            <NavLink icon={<Package size={20}/>} label="Matériel" />
-            <NavLink icon={<Car size={20}/>} label="Covoiturage" />
-            <NavLink icon={<MessageCircle size={20}/>} label="Messagerie" />
+            <NavLink to="/">
+              <NavLinkItem icon={<Home size={20} />} label="Accueil" />
+            </NavLink>
+
+            <NavLink to="/equipment">
+              <NavLinkItem icon={<Package size={20} />} label="Matériel" />
+            </NavLink>
+            <NavLink to="/corides">
+              <NavLinkItem icon={<Car size={20} />} label="Covoiturage" />
+            </NavLink>
+            <NavLink to="/">
+              <NavLinkItem
+                icon={<MessageCircle size={20} />}
+                label="Messagerie"
+              />
+            </NavLink>
           </div>
 
           {/* 4. Action Button (The "LeBonCoin" Orange Button) */}
@@ -42,7 +64,6 @@ const Navbar = () => {
               <span className="hidden sm:inline">Déposer une annonce</span>
             </button>
           </div>
-
         </div>
       </div>
     </nav>
@@ -50,9 +71,14 @@ const Navbar = () => {
 };
 
 // Helper Component for Links
-const NavLink = ({ icon, label }) => (
-  <a href="#" className="flex flex-col items-center px-3 py-1 text-[#1A1A1A] hover:bg-gray-100 rounded-lg group transition-all">
-    <span className="text-gray-600 group-hover:text-[#F56B2A] transition-colors">{icon}</span>
+const NavLinkItem = ({ icon, label }) => (
+  <a
+    href="#"
+    className="flex flex-col items-center px-3 py-1 text-[#1A1A1A] hover:bg-gray-100 rounded-lg group transition-all"
+  >
+    <span className="text-gray-600 group-hover:text-[#F56B2A] transition-colors">
+      {icon}
+    </span>
     <span className="text-[10px] font-medium mt-0.5">{label}</span>
   </a>
 );

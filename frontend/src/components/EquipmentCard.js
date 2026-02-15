@@ -33,7 +33,7 @@ const EquipmentCard = ({ equipment, compact = false }) => {
         <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
           {equipment.title}
         </h3>
-        <p className="text-orange-600 font-bold text-lg mb-2">{equipment.price}</p>
+        <p className="text-gray-500 mb-2">{equipment.owner}</p>
         <p className="text-sm text-gray-500 mb-3">{equipment.location}</p>
         <button className="w-full bg-orange-600 text-white py-2 rounded-md hover:bg-orange-700 transition-colors font-medium">
           Louer
