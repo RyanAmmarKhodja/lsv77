@@ -2,21 +2,30 @@ import React, { useState } from "react";
 import { Mail, Lock, User, Eye, EyeOff, ArrowRight } from "lucide-react";
 import api from "../api";
 import Loading from "../components/Loading";
-import AuthProvider from "../AuthProvider";
+import { useAuth } from "../AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    Email: "", // Changed from Email
-    Password: "", // Changed from Password
-    FirstName: "", // Changed from FirstName
-    LastName: "", // Changed from LastName
-  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [formData, setFormData] = useState({
+    Email: "",
+    Password: "",
+    FirstName: "",
+    LastName: "",
+  });
 
-  const auth = AuthProvider;
+  const auth = useAuth();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (auth.token) {
+      navigate("/");
+    }
+  }, [auth.token, navigate]); // Added dependency array to prevent infinite loops
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -26,25 +35,34 @@ const AuthPage = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
     try {
-      const endpoint = isLogin ? "/auth/login" : "/users/register";
-      const response = await api.post(endpoint, formData);
+      if (isLogin) {
+        // --- LOGIN LOGIC ---
+        await auth.login(formData.Email, formData.Password);
+        console.log("Logged in");
+        // useEffect will handle the redirect to "/"
+      } else {
+        // --- REGISTER LOGIC ---
+        const response = await api.post("/users/register", formData);
 
-      console.log("Success:", response.data);
+        setSuccess("Compte créé avec succès !");
 
-    //   // If login, save the token!
-    //   if (isLogin && response.data.token) {
-    //     localStorage.setItem("token", response.data.token);
-    //   }
-        auth.
-    
-
-      alert(isLogin ? "Connecté !" : "Compte créé !");
-      setFormData({ Email: "", Password: "", FirstName: "", LastName: "" });
+        // Switch to login view and pre-fill the email
+        setIsLogin(true);
+        setFormData({
+          Email: response.data.email || formData.Email,
+          Password: "",
+          FirstName: "",
+          LastName: "",
+        });
+      }
     } catch (err) {
-      const message = err.response?.data || "Une erreur est survenue.";
-      setError(message);
+      console.error("Login Error:", err);
+      // Handle both object {message: ""} and string errors
+      const serverMessage = err.response?.data?.message || err.response?.data;
+      setError(serverMessage || "Une erreur est survenue.");
     } finally {
       setLoading(false);
     }
@@ -77,7 +95,22 @@ const AuthPage = () => {
         <h2 className="text-xl font-bold text-[#1A1A1A] mb-6">
           {isLogin ? "Se connecter" : "Créer un compte"}
         </h2>
+        
 
+        {error && (
+          <p className="text-white bg-red-500 p-4 rounded-2xl">
+            {typeof error === "object" ? error.message : error}
+          </p>
+        )}
+
+        {success && (
+          <p className="text-white bg-green-500 p-4 rounded-2xl">{success}</p>
+        )}
+
+<div className="text-center mb-5">
+     {loading && <Loading />}
+</div>
+      
         <form className="space-y-4" onSubmit={handleSubmit}>
           {/* Name Field (Register Only) */}
           {!isLogin && (
@@ -169,12 +202,14 @@ const AuthPage = () => {
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
+              
             </div>
           </div>
-
+         
           {/* Submit Button */}
           <button className="w-full bg-[#F56B2A] hover:bg-[#E35B1D] text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-orange-200 flex items-center justify-center gap-2 group mt-6">
             {isLogin ? "Me connecter" : "Continuer"}
+            
             <ArrowRight
               size={18}
               className="group-hover:translate-x-1 transition-transform"
@@ -192,13 +227,6 @@ const AuthPage = () => {
             >
               {isLogin ? "Créer un compte" : "Se connecter"}
             </button>
-
-            {error && (
-              <p className="text-white bg-red-500">
-                {typeof error === "object" ? error.message : error}
-              </p>
-            )}
-            {loading && <Loading />}
           </p>
         </div>
       </div>

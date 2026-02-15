@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthProvider";
 import {
   Search,
   MessageCircle,
@@ -8,11 +9,11 @@ import {
   Home,
   PlusSquare,
 } from "lucide-react";
-import Equipment from "../pages/Equipment";
-import Covoiturages from "../pages/CoRide";
-//import Home from "../pages/Home";
+
+
 
 const Navbar = () => {
+  const auth = useAuth();
   return (
     <nav className="border-b border-gray-200 bg-white sticky top-0 z-50">
       {/* Upper Container */}
@@ -55,6 +56,10 @@ const Navbar = () => {
                 label="Messagerie"
               />
             </NavLink>
+
+            <button className="bg-red-500 text-white " onClick={auth.logout}>
+          LOGOUT
+            </button>
           </div>
 
           {/* 4. Action Button (The "LeBonCoin" Orange Button) */}

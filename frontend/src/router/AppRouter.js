@@ -4,7 +4,6 @@ import PageNotFound from "../pages/PageNotFound";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../AuthProvider";
 import ClientLayout from "../layouts/ClientLayout";
-// import AdminLayout from "../layouts/AdminLayout";
 import Home from "../pages/Home";
 import Equipment from "../pages/Equipment";
 import ShareEquipment from "../pages/ShareEquipment";

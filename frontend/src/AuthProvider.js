@@ -2,7 +2,6 @@ import { useContext, createContext, useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 import api from "./api";
-import Loading from "./components/Loading";
 
 const AuthContext = createContext();
 
@@ -15,11 +14,9 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token") || "");
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
 
   // useEffect will run every refresh to "remember" token.
   useEffect(() => {
-    setLoading(true);
     const initAuth = async () => {
       if (token) {
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -31,16 +28,15 @@ const AuthProvider = ({ children }) => {
           logout(); // logout if token is bad
         }
       }
-      setLoading(false);
     };
 
     initAuth();
   }, [token]);
 
   // LOGIN
-  const login = async (email, password) => {
+  const login = async (Email, Password) => {
     try {
-      const response = await api.post("/login", { email, password });
+      const response = await api.post("/auth/login", { Email, Password });
       const token = response.data.token;
 
       setToken(token);
@@ -49,7 +45,7 @@ const AuthProvider = ({ children }) => {
       localStorage.setItem("token", token);
       api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-      navigate("/home");
+      navigate("/");
       return response.data;
     } catch (error) {
       throw error;
@@ -59,7 +55,6 @@ const AuthProvider = ({ children }) => {
   // LOGOUT
   const logout = async () => {
     try {
-      await api.post("/logout");
       localStorage.removeItem("token");
 
       delete api.defaults.headers.common["Authorization"]; // remove token from headers
@@ -72,7 +67,6 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  <Loading loading={loading} />
 
   return (
     // Provide user, token, login and logout to children
