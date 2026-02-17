@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace campus_insider.Services
 {
-    public class PostService
+    public class PostService : IPostService
     {
         private readonly AppDbContext _context;
 
@@ -14,108 +14,147 @@ namespace campus_insider.Services
             _context = context;
         }
 
-        public async Task<ServiceResult<PostResponseDto>> CreatePost(PostCreateDto dto, long authorId)
+        public async Task<CorideDto> CreateCorideAsync(long authorId, CreateCorideDto dto)
         {
-            if (string.IsNullOrWhiteSpace(dto.Title))
-                return ServiceResult<PostResponseDto>.Fail("Title is required.");
-
-            if (dto.Title.Length > 200)
-                return ServiceResult<PostResponseDto>.Fail("Title must be 200 characters or less.");
-
-            if (string.IsNullOrWhiteSpace(dto.Content))
-                return ServiceResult<PostResponseDto>.Fail("Content is required.");
-
-            if (dto.Content.Length > 5000)
-                return ServiceResult<PostResponseDto>.Fail("Content must be 5000 characters or less.");
-
-            var post = new Post
+            var coride = new Coride
             {
                 AuthorId = authorId,
-                Title = dto.Title.Trim(),
-                Content = dto.Content.Trim(),
-                ImageUrl = dto.ImageUrl?.Trim(),
-                Category = dto.Category,
-                Tags = dto.Tags?.Trim(),
-                CreatedAt = DateTime.UtcNow
+                Title = dto.Title,
+                Content = dto.Content,
+                DepartureTime = dto.DepartureTime,
+                DepartureLocation = dto.DepartureLocation,
+                DestinationLocation = dto.DestinationLocation,
+                AvailableSeats = dto.AvailableSeats,
+                ReturnTime = dto.ReturnTime,
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
             };
 
-            _context.Posts.Add(post);
+            _context.Corides.Add(coride);
             await _context.SaveChangesAsync();
 
-            // Reload with author
-            var created = await _context.Posts
+            return await MapToCorideDto(coride);
+        }
+
+        public async Task<EquipmentDto> CreateEquipmentAsync(long authorId, CreateEquipmentDto dto)
+        {
+            var equipment = new Equipment
+            {
+                AuthorId = authorId,
+                Title = dto.Title,
+                Content = dto.Content,
+                Location = dto.Location,
+                Category = dto.Category,
+                CreatedAt = DateTime.UtcNow,
+                IsActive = true
+            };
+
+            _context.Equipment.Add(equipment);
+            await _context.SaveChangesAsync();
+
+            return await MapToEquipmentDto(equipment);
+        }
+
+        public async Task<PostDto?> GetPostByIdAsync(long id)
+        {
+            var post = await _context.Posts
                 .Include(p => p.Author)
-                .FirstOrDefaultAsync(p => p.Id == post.Id);
+                .FirstOrDefaultAsync(p => p.Id == id);
 
-            return ServiceResult<PostResponseDto>.Ok(MapToDto(created!));
-        }
+            if (post == null) return null;
 
-        public async Task<ServiceResult> LikePost(long postId, long userId)
-        {
-            // Check if already liked
-            var existingLike = await _context.PostLikes
-                .FirstOrDefaultAsync(pl => pl.PostId == postId && pl.UserId == userId);
-
-            if (existingLike != null)
-                return ServiceResult.Fail("You already liked this post.");
-
-            var post = await _context.Posts.FindAsync(postId);
-            if (post == null)
-                return ServiceResult.Fail("Post not found.");
-
-            _context.PostLikes.Add(new PostLike
+            return post switch
             {
-                PostId = postId,
-                UserId = userId,
-                CreatedAt = DateTime.UtcNow
-            });
-
-            post.LikeCount++;
-            await _context.SaveChangesAsync();
-
-            return ServiceResult.Ok();
+                Coride coride => await MapToCorideDto(coride),
+                Equipment equipment => await MapToEquipmentDto(equipment),
+                _ => null
+            };
         }
 
-        public async Task<ServiceResult> UnlikePost(long postId, long userId)
+        //public async Task<IEnumerable<PostDto>> GetUserPostsAsync(long userId)
+        //{
+        //    var posts = await _context.Posts
+        //        .Include(p => p.Author)
+        //        .Where(p => p.AuthorId == userId)
+        //        .OrderByDescending(p => p.CreatedAt)
+        //        .ToListAsync();
+
+        //    return posts.Select(post => post switch
+        //    {
+        //        Coride coride => MapToCorideDto(coride).Result,
+        //        Equipment equipment => MapToEquipmentDto(equipment).Result,
+        //        _ => null
+        //    }).Where(dto => dto != null).Cast<PostDto>();
+        //}
+
+        public async Task<bool> DeletePostAsync(long id, long authorId)
         {
-            var like = await _context.PostLikes
-                .FirstOrDefaultAsync(pl => pl.PostId == postId && pl.UserId == userId);
+            var post = await _context.Posts
+                .FirstOrDefaultAsync(p => p.Id == id && p.AuthorId == authorId);
 
-            if (like == null)
-                return ServiceResult.Fail("You haven't liked this post.");
+            if (post == null) return false;
 
-            var post = await _context.Posts.FindAsync(postId);
-            if (post == null)
-                return ServiceResult.Fail("Post not found.");
-
-            _context.PostLikes.Remove(like);
-            post.LikeCount = Math.Max(0, post.LikeCount - 1);
+            _context.Posts.Remove(post);
             await _context.SaveChangesAsync();
-
-            return ServiceResult.Ok();
+            return true;
         }
 
-        private PostResponseDto MapToDto(Post post) => new()
+        public async Task<bool> DeactivatePostAsync(long id, long authorId)
         {
-            Id = post.Id,
-            Title = post.Title,
-            Content = post.Content,
-            ImageUrl = post.ImageUrl,
-            Category = post.Category,
-            Tags = post.Tags?.Split(',').Select(t => t.Trim()).ToList() ?? new List<string>(),
-            LikeCount = post.LikeCount,
-            CommentCount = post.CommentCount,
-            Author = new UserResponseDto
+            var post = await _context.Posts
+                .FirstOrDefaultAsync(p => p.Id == id && p.AuthorId == authorId);
+
+            if (post == null) return false;
+
+            post.IsActive = false;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        // Helper mapping methods
+        private async Task<CorideDto> MapToCorideDto(Coride coride)
+        {
+            if (coride.Author == null)
             {
-                Id = post.Author.Id,
-                FirstName = post.Author.FirstName,
-                LastName = post.Author.LastName,
-                Email = post.Author.Email,
-                Role = post.Author.Role,
-                CreatedAt = post.Author.CreatedAt
-            },
-            CreatedAt = post.CreatedAt,
-            UpdatedAt = post.UpdatedAt
-        };
+                await _context.Entry(coride).Reference(c => c.Author).LoadAsync();
+            }
+
+            return new CorideDto
+            {
+                Id = coride.Id,
+                AuthorId = coride.AuthorId,
+                Title = coride.Title,
+                Content = coride.Content,
+                IsActive = coride.IsActive,
+                CreatedAt = coride.CreatedAt,
+                PostType = "Coride",
+                DepartureTime = coride.DepartureTime,
+                DepartureLocation = coride.DepartureLocation,
+                DestinationLocation = coride.DestinationLocation,
+                AvailableSeats = coride.AvailableSeats,
+                ReturnTime = coride.ReturnTime
+            };
+        }
+
+        private async Task<EquipmentDto> MapToEquipmentDto(Equipment equipment)
+        {
+            if (equipment.Author == null)
+            {
+                await _context.Entry(equipment).Reference(e => e.Author).LoadAsync();
+            }
+
+            return new EquipmentDto
+            {
+                Id = equipment.Id,
+                AuthorId = equipment.AuthorId,
+                Title = equipment.Title,
+                Content = equipment.Content,
+                IsActive = equipment.IsActive,
+                CreatedAt = equipment.CreatedAt,
+                PostType = "Equipment",
+                Location = equipment.Location,
+                Category = equipment.Category
+            };
+        }
     }
 }

@@ -18,13 +18,8 @@
         //public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
         public List<Equipment> Equipment { get; set; } = new();
-        public List<Loan> Loans { get; set; } = new();
-        public List<CarpoolTrip> CarpoolTripsAsDriver { get; set; } = new();
-        public List<CarpoolPassenger> CarpoolPassengers { get; set; } = new();
         public List<Notification> Notifications { get; set; } = new();
         public List<Post> Posts { get; set; } = new();
-        public List<PostLike> PostLikes { get; set; } = new();
-        public List<Comment> Comments { get; set; } = new();
     }
 
 }

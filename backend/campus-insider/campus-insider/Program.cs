@@ -44,10 +44,10 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<EquipmentService>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IFeedService, FeedService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<FeedService>();
-builder.Services.AddScoped<PostService>();
 builder.Services.AddScoped<ImageService>();
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddRateLimiter(options =>

@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\Projects\\campus-insider\\backend\\campus-insider\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\controllers\\equipmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\controllers\\equipmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\controllers\\postcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\controllers\\postcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\dtos\\equipmentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\dtos\\equipmentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\services\\postservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\services\\postservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\services\\equipmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\services\\equipmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,8 +26,47 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PostController.cs",
+              "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Controllers\\PostController.cs",
+              "RelativeDocumentMoniker": "campus-insider\\Controllers\\PostController.cs",
+              "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Controllers\\PostController.cs*",
+              "RelativeToolTip": "campus-insider\\Controllers\\PostController.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-17T01:06:13.752Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PostService.cs",
+              "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Services\\PostService.cs",
+              "RelativeDocumentMoniker": "campus-insider\\Services\\PostService.cs",
+              "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Services\\PostService.cs",
+              "RelativeToolTip": "campus-insider\\Services\\PostService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAcAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-16T20:39:43.908Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "campus-insider\\Data\\AppDbContext.cs",
+              "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "campus-insider\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAHoAAAAAAAAAAAAAAIIAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-16T20:30:25.95Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
@@ -36,48 +75,9 @@
               "RelativeDocumentMoniker": "campus-insider\\Program.cs",
               "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Program.cs",
               "RelativeToolTip": "campus-insider\\Program.cs",
-              "ViewState": "AgIAAGkAAAAAAAAAAAAAAHQAAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAAG0AAAAAAAAAAAAowI4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-15T15:57:55.792Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "EquipmentDto.cs",
-              "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\DTOs\\EquipmentDto.cs",
-              "RelativeDocumentMoniker": "campus-insider\\DTOs\\EquipmentDto.cs",
-              "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\DTOs\\EquipmentDto.cs",
-              "RelativeToolTip": "campus-insider\\DTOs\\EquipmentDto.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAA7wBsAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-15T15:57:36.149Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "EquipmentController.cs",
-              "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Controllers\\EquipmentController.cs",
-              "RelativeDocumentMoniker": "campus-insider\\Controllers\\EquipmentController.cs",
-              "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Controllers\\EquipmentController.cs",
-              "RelativeToolTip": "campus-insider\\Controllers\\EquipmentController.cs",
-              "ViewState": "AgIAAIYAAAAAAAAAAAAkwI0AAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-15T15:55:04.112Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "EquipmentService.cs",
-              "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Services\\EquipmentService.cs",
-              "RelativeDocumentMoniker": "campus-insider\\Services\\EquipmentService.cs",
-              "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Services\\EquipmentService.cs",
-              "RelativeToolTip": "campus-insider\\Services\\EquipmentService.cs",
-              "ViewState": "AgIAANkAAAAAAAAAAAAcwPAAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-15T15:49:47.084Z",
               "EditorCaption": ""
             }
           ]
