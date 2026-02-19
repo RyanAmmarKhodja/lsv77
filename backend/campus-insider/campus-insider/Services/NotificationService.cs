@@ -11,11 +11,13 @@ namespace campus_insider.Services
     {
         private readonly AppDbContext _context;
         private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly EmailService _emailService;
 
-        public NotificationService(AppDbContext context, IHubContext<NotificationHub> hubContext)
+        public NotificationService(AppDbContext context, IHubContext<NotificationHub> hubContext, EmailService emailService)
         {
             _context = context;
             _hubContext = hubContext;
+            _emailService = emailService;
         }
 
         #region --- Queries ---
@@ -57,6 +59,71 @@ namespace campus_insider.Services
 
         #endregion
 
+        #region --- Broadcast Notifications ---
+
+        public async Task<ServiceResult> BroadcastNotificationToAllUsers(
+            string type,
+            string title,
+            string message,
+            bool sendEmail = false,
+            string? actionUrl = null,
+            string? actionText = null)
+        {
+            // Get all active users
+            var userIds = await _context.Users
+                .Select(u => u.Id)
+                .ToListAsync();
+
+            // Create notifications for all users
+            var notifications = userIds.Select(userId => new Notification
+            {
+                UserId = userId,
+                Type = type,
+                Title = title,
+                Message = message,
+                ActionUrl = actionUrl,
+                ActionText = actionText,
+                CreatedAt = DateTime.UtcNow
+            }).ToList();
+
+            _context.Notifications.AddRange(notifications);
+            await _context.SaveChangesAsync();
+
+            // Send real-time push to all connected users
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", new
+            {
+                Type = type,
+                Title = title,
+                Message = message,
+                ActionUrl = actionUrl,
+                ActionText = actionText,
+                CreatedAt = DateTime.UtcNow
+            });
+
+            // Send emails if requested
+            if (sendEmail)
+            {
+                var users = await _context.Users
+                    .Where(u => userIds.Contains(u.Id))
+                    .ToListAsync();
+
+                foreach (var user in users)
+                {
+                    await _emailService.SendNotificationEmailAsync(
+                        user.Email,
+                        user.FirstName,
+                        title,
+                        message,
+                        actionUrl
+                    );
+                }
+            }
+
+            return ServiceResult.Ok();
+        }
+
+        #endregion
+
         #region --- Commands ---
 
         public async Task<ServiceResult> CreateNotification(
@@ -64,6 +131,7 @@ namespace campus_insider.Services
             string type,
             string title,
             string message,
+            bool sendEmail = false,
             string? entityType = null,
             long? entityId = null,
             string? actionUrl = null,
@@ -87,6 +155,20 @@ namespace campus_insider.Services
 
             // TODO: Trigger real-time push here (SignalR)
             // await _hubContext.Clients.User(userId.ToString()).SendAsync("ReceiveNotification", MapToDto(notification));
+            if (sendEmail)
+            {
+                var user = await _context.Users.FindAsync(userId);
+                if (user != null)
+                {
+                    await _emailService.SendNotificationEmailAsync(
+                        user.Email,
+                        user.FirstName,
+                        title,
+                        message,
+                        actionUrl
+                    );
+                }
+            }
 
             await _hubContext.Clients
             .Group($"user-{userId}")
@@ -150,22 +232,11 @@ namespace campus_insider.Services
                 "LOAN_APPROVED",
                 "Loan Approved",
                 $"Your loan request for '{equipmentName}' has been approved.",
+                sendEmail: true, // Send email for important events
                 "Loan",
                 loanId,
                 $"/api/loans/{loanId}",
                 "View Loan"
-            );
-        }
-
-        public async Task NotifyLoanRejected(long borrowerId, string equipmentName)
-        {
-            await CreateNotification(
-                borrowerId,
-                "LOAN_REJECTED",
-                "Loan Rejected",
-                $"Your loan request for '{equipmentName}' has been rejected.",
-                null,
-                null
             );
         }
 
@@ -176,6 +247,7 @@ namespace campus_insider.Services
                 "LOAN_REQUEST",
                 "New Loan Request",
                 $"{borrowerName} wants to borrow your '{equipmentName}'.",
+                sendEmail: true, // Notify owner via email
                 "Loan",
                 loanId,
                 $"/api/loans/{loanId}/approve",
@@ -183,57 +255,15 @@ namespace campus_insider.Services
             );
         }
 
-        public async Task NotifyLoanDueSoon(long borrowerId, long loanId, string equipmentName, DateTime dueDate)
+        public async Task NotifySystemAnnouncement(string title, string message)
         {
-            await CreateNotification(
-                borrowerId,
-                "LOAN_DUE_SOON",
-                "Loan Due Soon",
-                $"Your loan for '{equipmentName}' is due on {dueDate:MMM dd}.",
-                "Loan",
-                loanId
+            await BroadcastNotificationToAllUsers(
+                "SYSTEM_ANNOUNCEMENT",
+                title,
+                message,
+                sendEmail: true // Send email to all users
             );
         }
-
-        // Carpool notifications
-        public async Task NotifyCarpoolJoined(long driverId, long carpoolId, string passengerName)
-        {
-            await CreateNotification(
-                driverId,
-                "CARPOOL_JOINED",
-                "New Passenger",
-                $"{passengerName} joined your carpool.",
-                "CarpoolTrip",
-                carpoolId,
-                $"/api/carpools/{carpoolId}",
-                "View Ride"
-            );
-        }
-
-        public async Task NotifyCarpoolLeft(long driverId, long carpoolId, string passengerName)
-        {
-            await CreateNotification(
-                driverId,
-                "CARPOOL_LEFT",
-                "Passenger Left",
-                $"{passengerName} left your carpool.",
-                "CarpoolTrip",
-                carpoolId
-            );
-        }
-
-        public async Task NotifyCarpoolCancelled(long passengerId, string departure, string destination)
-        {
-            await CreateNotification(
-                passengerId,
-                "CARPOOL_CANCELLED",
-                "Ride Cancelled",
-                $"The ride from {departure} to {destination} has been cancelled.",
-                null,
-                null
-            );
-        }
-
         #endregion
 
         #region --- Mapping ---

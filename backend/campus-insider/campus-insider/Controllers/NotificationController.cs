@@ -87,5 +87,36 @@ namespace campus_insider.Controllers
 
             return Ok(new { message = "Notification deleted." });
         }
+
+
+
+        [Authorize(Roles = "ADMIN")] // Only admins can broadcast
+        [HttpPost("broadcast")]
+        public async Task<IActionResult> BroadcastToAll([FromBody] BroadcastDto dto)
+        {
+            var result = await _notificationService.BroadcastNotificationToAllUsers(
+                dto.Type,
+                dto.Title,
+                dto.Message,
+                dto.SendEmail,
+                dto.ActionUrl,
+                dto.ActionText
+            );
+
+            if (!result.Success)
+                return BadRequest(new { message = result.ErrorMessage });
+
+            return Ok(new { message = "Notification broadcast successfully." });
+        }
+
+        public class BroadcastDto
+        {
+            public string Type { get; set; } = "ANNOUNCEMENT";
+            public string Title { get; set; } = string.Empty;
+            public string Message { get; set; } = string.Empty;
+            public bool SendEmail { get; set; } = false;
+            public string? ActionUrl { get; set; }
+            public string? ActionText { get; set; }
+        }
     }
 }

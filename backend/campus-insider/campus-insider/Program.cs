@@ -54,6 +54,7 @@ builder.Services.AddScoped<IFeedService, FeedService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<FeedService>();
 builder.Services.AddScoped<ImageService>();
+builder.Services.AddScoped<EmailService>();
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddRateLimiter(options =>
 //{

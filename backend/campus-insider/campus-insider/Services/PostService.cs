@@ -8,10 +8,12 @@ namespace campus_insider.Services
     public class PostService : IPostService
     {
         private readonly AppDbContext _context;
+        private readonly NotificationService _notificationService;
 
-        public PostService(AppDbContext context)
+        public PostService(AppDbContext context, NotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
         public async Task<CorideDto> CreateCorideAsync(long authorId, CreateCorideDto dto)
