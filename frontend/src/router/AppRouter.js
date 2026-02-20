@@ -7,6 +7,7 @@ import AuthPage from "../pages/AuthPage";
 import Feed from "../pages/Feed";
 import Post from "../pages/Post";
 import CreatePost from "../pages/CreatePost";
+import Chat from "../pages/Chat";
 
 export default function AppRouter() {
   const PrivateRoute = () => {
@@ -23,10 +24,9 @@ export default function AppRouter() {
     <>
       <Routes>
         <Route element={<PublicRoute />}>
-          <Route path="/login" element={<AuthPage />} />
-
           {/* Catch-all route for 404 */}
-          <Route path="*" element={<PageNotFound />} />
+          <Route path="*" element={<PageNotFound />} />{" "}
+          <Route path="/login" element={<AuthPage />} />
         </Route>
 
         {/* Protected Routes */}
@@ -35,6 +35,7 @@ export default function AppRouter() {
           <Route path="/feed" element={<Feed />} />
           <Route path="/post/:id" element={<Post />} />
           <Route path="/create-post" element={<CreatePost />} />
+          <Route path="/chat" element={<Chat />} />
         </Route>
       </Routes>
     </>

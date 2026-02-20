@@ -20,6 +20,9 @@
         public List<Equipment> Equipment { get; set; } = new();
         public List<Notification> Notifications { get; set; } = new();
         public List<Post> Posts { get; set; } = new();
+
+        public List<ChatParticipant> ChatParticipants { get; set; } = new();
+        public List<ChatMessage> SentMessages { get; set; } = new();
     }
 
 }

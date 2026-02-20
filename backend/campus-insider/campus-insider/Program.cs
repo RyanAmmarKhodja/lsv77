@@ -56,6 +56,7 @@ builder.Services.AddScoped<FeedService>();
 builder.Services.AddScoped<ImageService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddScoped<ChatService>();
 //builder.Services.AddRateLimiter(options =>
 //{
 //    options.AddFixedWindowLimiter("login-policy", opt =>
@@ -141,6 +142,7 @@ app.UseCors("AllowReactApp");
 //app.UseRateLimiter();
 app.UseAuthorization();
 app.MapHub<NotificationHub>("/hubs/notifications");
+app.MapHub<ChatHub>("/hubs/chat");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

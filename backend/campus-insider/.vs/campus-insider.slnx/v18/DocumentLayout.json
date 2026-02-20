@@ -3,6 +3,38 @@
   "WorkspaceRootPath": "C:\\Projects\\campus-insider\\backend\\campus-insider\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\services\\chatservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\services\\chatservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\dtos\\chatdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\dtos\\chatdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\hubs\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\hubs\\chathub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\models\\chatconversation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\models\\chatconversation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\services\\notificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\services\\notificationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -11,20 +43,12 @@
       "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\controllers\\notificationcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\services\\postservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\services\\postservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|c:\\projects\\campus-insider\\backend\\campus-insider\\campus-insider\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CECACB46-CC74-ECB7-7D9F-8863F59B9AC1}|campus-insider\\campus-insider.csproj|solutionrelative:campus-insider\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,11 +58,89 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ChatController.cs",
+              "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Controllers\\ChatController.cs",
+              "RelativeDocumentMoniker": "campus-insider\\Controllers\\ChatController.cs",
+              "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Controllers\\ChatController.cs",
+              "RelativeToolTip": "campus-insider\\Controllers\\ChatController.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAwwF0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-19T23:48:32.565Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ChatDto.cs",
+              "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\DTOs\\ChatDto.cs",
+              "RelativeDocumentMoniker": "campus-insider\\DTOs\\ChatDto.cs",
+              "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\DTOs\\ChatDto.cs",
+              "RelativeToolTip": "campus-insider\\DTOs\\ChatDto.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAwwB0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-19T23:48:06.237Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "ChatService.cs",
+              "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Services\\ChatService.cs",
+              "RelativeDocumentMoniker": "campus-insider\\Services\\ChatService.cs",
+              "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Services\\ChatService.cs",
+              "RelativeToolTip": "campus-insider\\Services\\ChatService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFQAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-19T23:47:32.082Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ChatHub.cs",
+              "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Hubs\\ChatHub.cs",
+              "RelativeDocumentMoniker": "campus-insider\\Hubs\\ChatHub.cs",
+              "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Hubs\\ChatHub.cs",
+              "RelativeToolTip": "campus-insider\\Hubs\\ChatHub.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-19T23:47:02.655Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Models\\User.cs",
+              "RelativeDocumentMoniker": "campus-insider\\Models\\User.cs",
+              "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Models\\User.cs",
+              "RelativeToolTip": "campus-insider\\Models\\User.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAswBgAAABEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-19T23:45:52.751Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ChatConversation.cs",
+              "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Models\\ChatConversation.cs",
+              "RelativeDocumentMoniker": "campus-insider\\Models\\ChatConversation.cs",
+              "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Models\\ChatConversation.cs",
+              "RelativeToolTip": "campus-insider\\Models\\ChatConversation.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAqwDsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-19T23:45:20.23Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "NotificationController.cs",
               "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Controllers\\NotificationController.cs",
               "RelativeDocumentMoniker": "campus-insider\\Controllers\\NotificationController.cs",
@@ -46,12 +148,11 @@
               "RelativeToolTip": "campus-insider\\Controllers\\NotificationController.cs",
               "ViewState": "AgIAAHAAAAAAAAAAAAAYwHcAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-19T21:07:28.391Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-19T21:07:28.391Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 11,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\appsettings.json",
               "RelativeDocumentMoniker": "campus-insider\\appsettings.json",
@@ -59,12 +160,11 @@
               "RelativeToolTip": "campus-insider\\appsettings.json",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAABcAAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-02-19T21:05:12.619Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-19T21:05:12.619Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 10,
               "Title": "PostService.cs",
               "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Services\\PostService.cs",
               "RelativeDocumentMoniker": "campus-insider\\Services\\PostService.cs",
@@ -72,31 +172,30 @@
               "RelativeToolTip": "campus-insider\\Services\\PostService.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAA8AAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-19T20:46:15.709Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-19T20:46:15.709Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 8,
               "Title": "NotificationService.cs",
               "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Services\\NotificationService.cs",
               "RelativeDocumentMoniker": "campus-insider\\Services\\NotificationService.cs",
               "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Services\\NotificationService.cs",
               "RelativeToolTip": "campus-insider\\Services\\NotificationService.cs",
-              "ViewState": "AgIAAAUBAAAAAAAAAAAqwAkBAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAAwAkBAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-19T20:44:35.504Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 0,
               "Title": "AppDbContext.cs",
               "DocumentMoniker": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Data\\AppDbContext.cs",
               "RelativeDocumentMoniker": "campus-insider\\Data\\AppDbContext.cs",
               "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Data\\AppDbContext.cs",
               "RelativeToolTip": "campus-insider\\Data\\AppDbContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAYwBUAAABEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-18T01:16:15.226Z",
               "EditorCaption": ""
@@ -109,7 +208,7 @@
               "RelativeDocumentMoniker": "campus-insider\\Program.cs",
               "ToolTip": "C:\\Projects\\campus-insider\\backend\\campus-insider\\campus-insider\\Program.cs",
               "RelativeToolTip": "campus-insider\\Program.cs",
-              "ViewState": "AgIAACQAAAAAAAAAAAAowDgAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAAIcAAAAAAAAAAAAAAJAAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-15T15:57:55.792Z",
               "EditorCaption": ""

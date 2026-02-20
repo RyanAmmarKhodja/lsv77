@@ -26,6 +26,139 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "campus_insider.Controllers.ChatController",
+    "Method": "GetConversations",
+    "RelativePath": "api/chat/conversations",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[campus_insider.DTOs.ChatConversationDto, campus-insider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "campus_insider.Controllers.ChatController",
+    "Method": "GetMessages",
+    "RelativePath": "api/chat/conversations/{conversationId}/messages",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "conversationId",
+        "Type": "System.Int64",
+        "IsRequired": true
+      },
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "campus_insider.Services.PagedResult\u00601[[campus_insider.DTOs.ChatMessageDto, campus-insider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "campus_insider.Controllers.ChatController",
+    "Method": "SendMessage",
+    "RelativePath": "api/chat/conversations/{conversationId}/messages",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "conversationId",
+        "Type": "System.Int64",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "campus_insider.DTOs.SendMessageDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "campus_insider.DTOs.ChatMessageDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "campus_insider.Controllers.ChatController",
+    "Method": "CreateDirectConversation",
+    "RelativePath": "api/chat/conversations/direct/{otherUserId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "otherUserId",
+        "Type": "System.Int64",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "campus_insider.DTOs.ChatConversationDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "campus_insider.Controllers.ChatController",
+    "Method": "GetUnreadCount",
+    "RelativePath": "api/chat/unread-count",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Int32",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "campus_insider.Controllers.FeedController",
     "Method": "GetFeed",
     "RelativePath": "api/feed",
@@ -177,6 +310,22 @@
       {
         "Name": "id",
         "Type": "System.Int64",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "campus_insider.Controllers.NotificationController",
+    "Method": "BroadcastToAll",
+    "RelativePath": "api/notifications/broadcast",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "campus_insider.Controllers.NotificationController\u002BBroadcastDto",
         "IsRequired": true
       }
     ],

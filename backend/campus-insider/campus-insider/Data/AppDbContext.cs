@@ -16,6 +16,11 @@ namespace campus_insider.Data
         public DbSet<Equipment> Equipment { get; set; }
         public DbSet<Notification> Notifications { get; set; }
 
+        public DbSet<ChatConversation> ChatConversations { get; set; }
+        public DbSet<ChatParticipant> ChatParticipants { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<ChatMessageRead> ChatMessageReads { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -164,6 +169,139 @@ namespace campus_insider.Data
             {
                 entity.Property(e => e.Location).IsRequired().HasMaxLength(200);
                
+            });
+
+            #endregion
+
+            #region --- ChatConversation Configuration ---
+
+            modelBuilder.Entity<ChatConversation>(entity =>
+            {
+                entity.ToTable("ChatConversations");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Type)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasDefaultValue("DIRECT");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.CreatedAt)
+                    .IsRequired()
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.LastMessageAt);
+
+                entity.HasIndex(e => e.Type);
+                entity.HasIndex(e => e.LastMessageAt);
+            });
+
+            #endregion
+
+            #region --- ChatParticipant Configuration ---
+
+            modelBuilder.Entity<ChatParticipant>(entity =>
+            {
+                entity.ToTable("ChatParticipants");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.JoinedAt)
+                    .IsRequired()
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.LastReadAt);
+
+                entity.Property(e => e.IsMuted)
+                    .HasDefaultValue(false);
+
+                entity.HasOne(cp => cp.Conversation)
+                    .WithMany(c => c.Participants)
+                    .HasForeignKey(cp => cp.ConversationId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(cp => cp.User)
+                    .WithMany(u => u.ChatParticipants)
+                    .HasForeignKey(cp => cp.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // User can only be in a conversation once
+                entity.HasIndex(cp => new { cp.ConversationId, cp.UserId })
+                    .IsUnique();
+
+                entity.HasIndex(cp => cp.UserId);
+            });
+
+            #endregion
+
+            #region --- ChatMessage Configuration ---
+
+            modelBuilder.Entity<ChatMessage>(entity =>
+            {
+                entity.ToTable("ChatMessages");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Content)
+                    .IsRequired()
+                    .HasMaxLength(5000);
+
+                entity.Property(e => e.AttachmentUrl)
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.IsEdited)
+                    .HasDefaultValue(false);
+
+                entity.Property(e => e.IsDeleted)
+                    .HasDefaultValue(false);
+
+                entity.Property(e => e.CreatedAt)
+                    .IsRequired()
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(e => e.EditedAt);
+
+                entity.HasOne(m => m.Conversation)
+                    .WithMany(c => c.Messages)
+                    .HasForeignKey(m => m.ConversationId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(m => m.Sender)
+                    .WithMany(u => u.SentMessages)
+                    .HasForeignKey(m => m.SenderId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(m => m.ConversationId);
+                entity.HasIndex(m => m.CreatedAt);
+                entity.HasIndex(m => m.IsDeleted);
+            });
+
+            #endregion
+
+            #region --- ChatMessageRead Configuration ---
+
+            modelBuilder.Entity<ChatMessageRead>(entity =>
+            {
+                entity.ToTable("ChatMessageReads");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.ReadAt)
+                    .IsRequired()
+                    .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.HasOne(mr => mr.Message)
+                    .WithMany(m => m.ReadReceipts)
+                    .HasForeignKey(mr => mr.MessageId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(mr => mr.User)
+                    .WithMany()
+                    .HasForeignKey(mr => mr.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // User can only read a message once
+                entity.HasIndex(mr => new { mr.MessageId, mr.UserId })
+                    .IsUnique();
             });
 
             #endregion
