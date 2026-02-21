@@ -100,6 +100,14 @@
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "postId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
         ],
         "responses": {
@@ -691,6 +699,38 @@
         }
       }
     },
+    "/api/post/upload-image": {
+      "post": {
+        "tags": [
+          "Post"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/post/{id}/deactivate": {
       "patch": {
         "tags": [
@@ -710,6 +750,35 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/stats/dashboard": {
+      "get": {
+        "tags": [
+          "Stats"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardStatsDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardStatsDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardStatsDto"
+                }
+              }
+            }
           }
         }
       }
@@ -897,6 +966,53 @@
           }
         }
       }
+    },
+    "/api/users/search": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserResponseDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserResponseDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -939,6 +1055,20 @@
           "AUTRE"
         ],
         "type": "string"
+      },
+      "CategoryStatDto": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
       },
       "ChatConversationDto": {
         "type": "object",
@@ -1127,6 +1257,75 @@
         },
         "additionalProperties": false
       },
+      "DailyStatDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "nullable": true
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DashboardStatsDto": {
+        "type": "object",
+        "properties": {
+          "totalUsers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPosts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "activePosts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalRidesConfirmed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalEquipmentLoaned": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalConversations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalMessages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "categoryDistribution": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryStatDto"
+            },
+            "nullable": true
+          },
+          "mostViewedPosts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TopPostDto"
+            },
+            "nullable": true
+          },
+          "postsPerDay": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DailyStatDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginDto": {
         "type": "object",
         "properties": {
@@ -1243,6 +1442,36 @@
           "content": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TopPostDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "type": "string",
+            "nullable": true
+          },
+          "viewCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "authorName": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false

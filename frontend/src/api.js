@@ -10,7 +10,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       console.warn("Token expired or unauthorized, logging out...");
-      logoutUser(); // custom logout function (defined below)
+      //logoutUser(); // custom logout function (defined below)
     }
     return Promise.reject(error);
   }

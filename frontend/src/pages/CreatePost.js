@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Car, Wrench, Film, Cpu, HelpCircle, ArrowLeft,
-    MapPin, Clock, Users, Loader2, Send, Tag, ArrowRight
+    MapPin, Clock, Users, Loader2, Send, Tag, ArrowRight, ImagePlus, X
 } from 'lucide-react';
 import api from '../api';
 
@@ -49,6 +49,11 @@ const CreatePost = () => {
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState(null);
 
+    // Image upload
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [uploadingImage, setUploadingImage] = useState(false);
+
     const isCovoiturage = category === 'COVOITURAGE';
 
     const handleSubmit = async (e) => {
@@ -76,12 +81,32 @@ const CreatePost = () => {
                     availableSeats: parseInt(availableSeats, 10),
                 });
             } else {
+                // Upload image first if present
+                let imageUrl = null;
+                if (imageFile) {
+                    setUploadingImage(true);
+                    try {
+                        const formData = new FormData();
+                        formData.append('file', imageFile);
+                        const imgRes = await api.post('/post/upload-image', formData, {
+                            headers: { 'Content-Type': 'multipart/form-data' }
+                        });
+                        imageUrl = imgRes.data.imageUrl;
+                    } catch (imgErr) {
+                        setError("Échec de l'envoi de l'image.");
+                        setSubmitting(false);
+                        setUploadingImage(false);
+                        return;
+                    }
+                    setUploadingImage(false);
+                }
                 await api.post('/post/equipment', {
                     title,
                     content,
                     postType,
                     category,
                     location,
+                    imageUrl,
                 });
             }
             navigate('/feed');
@@ -286,6 +311,51 @@ const CreatePost = () => {
                                         className="w-full pl-10 pr-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm"
                                     />
                                 </div>
+                            </div>
+                        )}
+
+                        {/* ── 5b. Image Upload (non-covoiturage) ── */}
+                        {!isCovoiturage && category && (
+                            <div>
+                                <label className="text-sm font-semibold text-gray-700 mb-1.5 block">
+                                    Image (optionnel)
+                                </label>
+                                {imagePreview ? (
+                                    <div className="relative inline-block">
+                                        <img
+                                            src={imagePreview}
+                                            alt="Aperçu"
+                                            className="w-full max-h-48 object-cover rounded-lg border border-gray-200"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setImageFile(null);
+                                                setImagePreview(null);
+                                            }}
+                                            className="absolute top-2 right-2 p-1 bg-white/80 rounded-full hover:bg-white transition-colors"
+                                        >
+                                            <X className="w-4 h-4 text-gray-600" />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-orange-400 hover:bg-orange-50/50 transition-all">
+                                        <ImagePlus className="w-8 h-8 text-gray-400 mb-2" />
+                                        <span className="text-sm text-gray-500">Cliquez pour ajouter une image</span>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={(e) => {
+                                                const file = e.target.files[0];
+                                                if (file) {
+                                                    setImageFile(file);
+                                                    setImagePreview(URL.createObjectURL(file));
+                                                }
+                                            }}
+                                        />
+                                    </label>
+                                )}
                             </div>
                         )}
 

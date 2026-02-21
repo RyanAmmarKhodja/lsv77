@@ -12,9 +12,11 @@ namespace campus_insider.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
-       
-        public PostController(IPostService postService) {
+        private readonly ImageService _imageService;
+
+        public PostController(IPostService postService, ImageService imageService) {
              _postService = postService;
+             _imageService = imageService;
         }
 
         private long GetCurrentUserId()
@@ -35,14 +37,6 @@ namespace campus_insider.Controllers
 
             return Ok(post);
         }
-
-        //// GET: api/post/user/{userId}
-        //[HttpGet("user/{userId}")]
-        //public async Task<IActionResult> GetUserPosts(Guid userId)
-        //{
-        //    var posts = await _postService.GetUserPostsAsync(userId);
-        //    return Ok(posts);
-        //}
 
         // POST: api/post/coride
         [HttpPost("coride")]
@@ -68,6 +62,17 @@ namespace campus_insider.Controllers
 
             var equipment = await _postService.CreateEquipmentAsync(authorId, dto);
             return CreatedAtAction(nameof(GetPost), new { id = equipment.Id }, equipment);
+        }
+
+        // POST: api/post/upload-image
+        [HttpPost("upload-image")]
+        public async Task<IActionResult> UploadImage(IFormFile file)
+        {
+            var result = await _imageService.UploadEquipmentImage(file);
+            if (!result.Success)
+                return BadRequest(new { message = result.ErrorMessage });
+
+            return Ok(new { imageUrl = result.Data!.Url });
         }
 
 

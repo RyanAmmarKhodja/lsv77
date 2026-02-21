@@ -94,6 +94,18 @@ namespace campus_insider.Controllers
             return Ok(new { message = "Profile updated successfully." });
         }
 
+        // GET /api/users/search?q=term
+        [Authorize]
+        [HttpGet("search")]
+        public async Task<ActionResult<List<UserResponseDto>>> SearchUsers([FromQuery] string q)
+        {
+            if (string.IsNullOrWhiteSpace(q) || q.Length < 2)
+                return Ok(new List<UserResponseDto>());
+
+            var users = await _userService.SearchUsersAsync(q);
+            return Ok(users);
+        }
+
         #endregion
     }
 }

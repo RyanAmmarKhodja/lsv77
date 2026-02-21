@@ -36,9 +36,9 @@ namespace campus_insider.Controllers
             return Ok(conversations);
         }
 
-        // POST /api/chat/conversations/direct/{otherUserId}
+        // POST /api/chat/conversations/direct/{otherUserId}?postId=123
         [HttpPost("conversations/direct/{otherUserId}")]
-        public async Task<ActionResult<ChatConversationDto>> CreateDirectConversation(long otherUserId)
+        public async Task<ActionResult<ChatConversationDto>> CreateDirectConversation(long otherUserId, [FromQuery] long? postId = null)
         {
             var userId = GetCurrentUserId();
             if (userId == 0) return Unauthorized();
@@ -46,6 +46,12 @@ namespace campus_insider.Controllers
             var result = await _chatService.CreateOrGetDirectConversation(userId, otherUserId);
             if (!result.Success)
                 return BadRequest(new { message = result.ErrorMessage });
+
+            // Record post interaction if coming from a post page
+            if (postId.HasValue)
+            {
+                await _chatService.RecordPostInteraction(postId.Value, userId);
+            }
 
             return Ok(result.Data);
         }

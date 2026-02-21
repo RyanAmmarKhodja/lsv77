@@ -8,6 +8,7 @@ import Feed from "../pages/Feed";
 import Post from "../pages/Post";
 import CreatePost from "../pages/CreatePost";
 import Chat from "../pages/Chat";
+import Statistics from "../pages/Statistics";
 
 export default function AppRouter() {
   const PrivateRoute = () => {
@@ -36,6 +37,7 @@ export default function AppRouter() {
           <Route path="/post/:id" element={<Post />} />
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/statistics" element={<Statistics />} />
         </Route>
       </Routes>
     </>

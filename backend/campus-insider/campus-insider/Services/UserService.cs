@@ -30,6 +30,19 @@ namespace campus_insider.Services
             return user != null ? MapToResponseDto(user) : null;
         }
 
+        public async Task<List<UserResponseDto>> SearchUsersAsync(string query)
+        {
+            var q = query.ToLower().Trim();
+            var users = await _context.Users
+                .AsNoTracking()
+                .Where(u => u.FirstName.ToLower().Contains(q) ||
+                            u.LastName.ToLower().Contains(q) ||
+                            u.Email.ToLower().Contains(q))
+                .Take(20)
+                .ToListAsync();
+            return users.Select(MapToResponseDto).ToList();
+        }
+
         #endregion
 
         #region --- Authentication ---

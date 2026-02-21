@@ -15,6 +15,7 @@ namespace campus_insider.Models
 
         // State
         public bool IsActive { get; set; } = true;
+        public int ViewCount { get; set; } = 0;
         public DateTime CreatedAt { get; set; }
 
         // Navigation

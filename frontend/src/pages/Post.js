@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
     MapPin, Clock, Users, ArrowRight, ArrowLeft, Car, Wrench,
     Loader2, Trash2, User as UserIcon, Mail, Calendar, Tag, Eye, EyeOff,
-    Film, Cpu, HelpCircle
+    Film, Cpu, HelpCircle, MessageSquare
 } from 'lucide-react';
 import api from '../api';
 import { useAuth } from '../AuthProvider';
@@ -136,10 +136,10 @@ const Post = () => {
 
                     {/* Header gradient bar */}
                     <div className={`px-6 py-4 bg-gradient-to-r ${catConfig.color === 'blue' ? 'from-blue-500 to-blue-600' :
-                            catConfig.color === 'orange' ? 'from-orange-500 to-orange-600' :
-                                catConfig.color === 'purple' ? 'from-purple-500 to-purple-600' :
-                                    catConfig.color === 'emerald' ? 'from-emerald-500 to-emerald-600' :
-                                        'from-gray-500 to-gray-600'
+                        catConfig.color === 'orange' ? 'from-orange-500 to-orange-600' :
+                            catConfig.color === 'purple' ? 'from-purple-500 to-purple-600' :
+                                catConfig.color === 'emerald' ? 'from-emerald-500 to-emerald-600' :
+                                    'from-gray-500 to-gray-600'
                         }`}
                     >
                         <div className="flex items-center justify-between">
@@ -239,9 +239,17 @@ const Post = () => {
                         </div>
 
                         {/* Metadata */}
-                        <div className="flex items-center gap-2 text-xs text-gray-400 mb-6">
-                            <Calendar className="w-3.5 h-3.5" />
-                            Publié le {formatDate(post.createdAt)}
+                        <div className="flex items-center gap-4 text-xs text-gray-400 mb-6">
+                            <span className="flex items-center gap-1">
+                                <Calendar className="w-3.5 h-3.5" />
+                                Publié le {formatDate(post.createdAt)}
+                            </span>
+                            {post.viewCount > 0 && (
+                                <span className="flex items-center gap-1">
+                                    <Eye className="w-3.5 h-3.5" />
+                                    {post.viewCount} vue{post.viewCount > 1 ? 's' : ''}
+                                </span>
+                            )}
                         </div>
 
                         {/* Author actions */}
@@ -274,7 +282,7 @@ const Post = () => {
                             <div className="w-14 h-14 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white text-xl font-bold shadow-sm">
                                 {(post.author.firstName || '?')[0]}
                             </div>
-                            <div>
+                            <div className="flex-1">
                                 <p className="font-bold text-gray-900 text-lg">
                                     {post.author.firstName} {post.author.lastName}
                                 </p>
@@ -284,6 +292,16 @@ const Post = () => {
                                 </p>
                             </div>
                         </div>
+                        {/* Send message button (hidden for own posts) */}
+                        {!isAuthor && (
+                            <button
+                                onClick={() => navigate(`/chat?userId=${post.author.id}&postId=${post.id}`)}
+                                className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#F56B2A] text-white hover:bg-[#E35B1D] font-semibold text-sm transition-colors shadow-sm"
+                            >
+                                <MessageSquare className="w-4 h-4" />
+                                Envoyer un message
+                            </button>
+                        )}
                     </div>
                 )}
             </div>

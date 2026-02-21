@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthProvider";
+import api from "../api";
 import {
   Search,
   MessageCircle,
@@ -29,7 +30,10 @@ const Navbar = () => {
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
         setShowNotifications(false);
       }
       if (profileRef.current && !profileRef.current.contains(event.target)) {
@@ -41,42 +45,15 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Fetch user info
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const token = localStorage.getItem("authToken");
-        const response = await fetch("/api/users/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch user:", error);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
   // Fetch notifications
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const token = localStorage.getItem("authToken");
-        const response = await fetch("/api/notifications?pageSize=5&isRead=false", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setNotifications(data.items || []);
-        }
+        const response = await api
+          .get("/notifications?pageSize=5&isRead=false")
+          .then((res) => {
+            setNotifications(res.data.items || []);
+          });
       } catch (error) {
         console.error("Failed to fetch notifications:", error);
       }
@@ -91,17 +68,8 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUnreadCount = async () => {
       try {
-        const token = localStorage.getItem("authToken");
-        const response = await fetch("/api/notifications/unread-count", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setUnreadCount(data.count || 0);
-        }
-      } catch (error) {
+        const response = await api.get("/notifications/unread-count").then(res=>{setUnreadCount(res.data.count || 0)})
+      }catch (error) {
         console.error("Failed to fetch unread count:", error);
       }
     };
@@ -113,17 +81,11 @@ const Navbar = () => {
 
   const handleMarkAsRead = async (notificationId) => {
     try {
-      const token = localStorage.getItem("authToken");
-      await fetch(`/api/notifications/${notificationId}/read`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await api.patch(`/notifications/${notificationId}/read`);
 
       // Update local state
       setNotifications((prev) =>
-        prev.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n))
+        prev.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n)),
       );
       setUnreadCount((prev) => Math.max(0, prev - 1));
     } catch (error) {
@@ -133,13 +95,7 @@ const Navbar = () => {
 
   const handleMarkAllAsRead = async () => {
     try {
-      const token = localStorage.getItem("authToken");
-      await fetch("/api/notifications/read-all", {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await api.patch("/notifications/read-all");
 
       setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
       setUnreadCount(0);
@@ -162,7 +118,10 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16 gap-8">
           {/* 1. Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <NavLink to="/" className="text-2xl font-black text-[#F56B2A] tracking-tighter">
+            <NavLink
+              to="/"
+              className="text-2xl font-black text-[#F56B2A] tracking-tighter"
+            >
               CampusInsider
             </NavLink>
           </div>
@@ -184,9 +143,12 @@ const Navbar = () => {
             <NavLink to="/">
               <NavLinkItem icon={<Home size={20} />} label="Accueil" />
             </NavLink>
-            
+
             <NavLink to="/chat">
-              <NavLinkItem icon={<MessageCircle size={20} />} label="Messages" />
+              <NavLinkItem
+                icon={<MessageCircle size={20} />}
+                label="Messages"
+              />
             </NavLink>
 
             {/* Notifications Dropdown */}
@@ -203,7 +165,9 @@ const Navbar = () => {
                     </span>
                   )}
                 </span>
-                <span className="text-[10px] font-medium mt-0.5">Notifications</span>
+                <span className="text-[10px] font-medium mt-0.5">
+                  Notifications
+                </span>
               </button>
 
               {/* Notifications Dropdown */}
@@ -224,7 +188,10 @@ const Navbar = () => {
                   <div className="overflow-y-auto flex-1">
                     {notifications.length === 0 ? (
                       <div className="p-8 text-center text-gray-500">
-                        <Bell size={48} className="mx-auto mb-2 text-gray-300" />
+                        <Bell
+                          size={48}
+                          className="mx-auto mb-2 text-gray-300"
+                        />
                         <p>Aucune notification</p>
                       </div>
                     ) : (
@@ -247,7 +214,9 @@ const Navbar = () => {
                               <h4 className="font-semibold text-sm text-gray-900">
                                 {notif.title}
                               </h4>
-                              <p className="text-sm text-gray-600 mt-1">{notif.message}</p>
+                              <p className="text-sm text-gray-600 mt-1">
+                                {notif.message}
+                              </p>
                               <p className="text-xs text-gray-400 mt-2">
                                 {formatTimeAgo(notif.createdAt)}
                               </p>

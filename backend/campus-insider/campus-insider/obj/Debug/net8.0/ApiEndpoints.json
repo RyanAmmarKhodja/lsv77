@@ -124,6 +124,11 @@
         "Name": "otherUserId",
         "Type": "System.Int64",
         "IsRequired": true
+      },
+      {
+        "Name": "postId",
+        "Type": "System.Nullable\u00601[[System.Int64, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
@@ -442,6 +447,42 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "campus_insider.Controllers.PostController",
+    "Method": "UploadImage",
+    "RelativePath": "api/post/upload-image",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "campus_insider.Controllers.StatsController",
+    "Method": "GetDashboardStats",
+    "RelativePath": "api/stats/dashboard",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "campus_insider.DTOs.DashboardStatsDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "campus_insider.Controllers.UserController",
     "Method": "GetUsers",
     "RelativePath": "api/users",
@@ -540,6 +581,32 @@
     "ReturnTypes": [
       {
         "Type": "campus_insider.DTOs.UserResponseDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "campus_insider.Controllers.UserController",
+    "Method": "SearchUsers",
+    "RelativePath": "api/users/search",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "q",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[campus_insider.DTOs.UserResponseDto, campus-insider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

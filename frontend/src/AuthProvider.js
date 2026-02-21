@@ -2,6 +2,7 @@ import { useContext, createContext, useState, useEffect } from "react";
 
 import { useNavigate } from "react-router-dom";
 import api from "./api";
+import Loading from "./components/Loading";
 
 const AuthContext = createContext();
 
@@ -13,6 +14,7 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   // useEffect will run every refresh to "remember" token.
@@ -27,7 +29,8 @@ const AuthProvider = ({ children }) => {
           console.error("Invalid or expired token:", err);
           logout(); // logout if token is bad
         }
-      }
+       
+      } setLoading(false);
     };
 
     initAuth();
@@ -71,7 +74,7 @@ const AuthProvider = ({ children }) => {
   return (
     // Provide user, token, login and logout to children
     <AuthContext.Provider value={{ token, user, login, logout }}>
-      {children}
+      {!loading ? children : <div className="h-screen flex items-center justify-center"><Loading/></div>}
     </AuthContext.Provider>
   );
 };

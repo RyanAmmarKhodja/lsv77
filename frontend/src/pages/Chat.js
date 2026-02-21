@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import * as signalR from "@microsoft/signalr";
-import { Send, ArrowLeft, MoreVertical, Search } from "lucide-react";
+import { Send, ArrowLeft, MoreVertical, Search, Plus, X, UserPlus } from "lucide-react";
 import api from "../api"
 
 const Chat = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -16,23 +17,51 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 
+  // User search state
+  const [showUserSearch, setShowUserSearch] = useState(false);
+  const [userSearchQuery, setUserSearchQuery] = useState("");
+  const [userSearchResults, setUserSearchResults] = useState([]);
+  const [searchingUsers, setSearchingUsers] = useState(false);
+
+  // Conversation filter
+  const [conversationFilter, setConversationFilter] = useState("");
+
   // Fetch current user
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        // const token = localStorage.getItem("token");
         const response = await api.get("/users/me");
-        if (response.ok) {
-          const data = await response.json();
-          setCurrentUser(data);
-        }
+        setCurrentUser(response.data);
       } catch (error) {
         console.error("Failed to fetch user:", error);
       }
     };
-
     fetchUser();
   }, []);
+
+  // Handle ?userId= query param (from Post page "Envoyer un message")
+  useEffect(() => {
+    const targetUserId = searchParams.get("userId");
+    const postId = searchParams.get("postId");
+    if (targetUserId && currentUser) {
+      const openConversationWithUser = async () => {
+        try {
+          const url = postId
+            ? `/chat/conversations/direct/${targetUserId}?postId=${postId}`
+            : `/chat/conversations/direct/${targetUserId}`;
+          const response = await api.post(url);
+          await fetchConversations();
+          setSelectedConversation(response.data);
+          fetchMessages(response.data.id);
+          // Clean the URL params
+          navigate("/chat", { replace: true });
+        } catch (error) {
+          console.error("Failed to open conversation:", error);
+        }
+      };
+      openConversationWithUser();
+    }
+  }, [searchParams, currentUser]);
 
   // Setup SignalR connection
   useEffect(() => {
@@ -60,17 +89,14 @@ const Chat = () => {
         .then(() => {
           console.log("Connected to chat hub");
 
-          // Listen for incoming messages
           connection.on("ReceiveMessage", (message) => {
             if (selectedConversation && message.conversationId === selectedConversation.id) {
               setMessages((prev) => [...prev, message]);
               scrollToBottom();
             }
-            // Update conversation list
             fetchConversations();
           });
 
-          // Listen for typing indicators
           connection.on("UserTyping", ({ userId, isTyping }) => {
             if (selectedConversation) {
               setIsTyping(isTyping);
@@ -93,12 +119,8 @@ const Chat = () => {
   // Fetch conversations
   const fetchConversations = async () => {
     try {
-      const token = localStorage.getItem("token");
       const response = await api.get("/chat/conversations");
-      if (response.ok) {
-        const data = await response.json();
-        setConversations(data);
-      }
+      setConversations(response.data);
     } catch (error) {
       console.error("Failed to fetch conversations:", error);
     }
@@ -111,12 +133,9 @@ const Chat = () => {
   // Fetch messages for selected conversation
   const fetchMessages = async (conversationId) => {
     try {
-      const response = await api.get(`/api/chat/conversations/${conversationId}/messages?pageSize=50`);
-      if (response.ok) {
-        const data = await response.json();
-        setMessages(data.items || []);
-        scrollToBottom();
-      }
+      const response = await api.get(`/chat/conversations/${conversationId}/messages?pageSize=50`);
+      setMessages(response.data.items || []);
+      scrollToBottom();
     } catch (error) {
       console.error("Failed to fetch messages:", error);
     }
@@ -137,11 +156,9 @@ const Chat = () => {
       await connection.invoke("SendMessage", selectedConversation.id, content);
     } catch (error) {
       console.error("Failed to send message:", error);
-      // Fallback to HTTP if SignalR fails
-      const response = await api.post(`/api/chat/conversations/${selectedConversation.id}/messages`, content)
-      if (response.ok) {
-        const message = await response.json();
-        setMessages((prev) => [...prev, message]);
+      const response = await api.post(`/chat/conversations/${selectedConversation.id}/messages`, { content });
+      if (response.status === 200) {
+        setMessages((prev) => [...prev, response.data]);
       }
     }
   };
@@ -150,12 +167,10 @@ const Chat = () => {
     if (connection && selectedConversation) {
       connection.invoke("TypingIndicator", selectedConversation.id, true);
 
-      // Clear previous timeout
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
       }
 
-      // Stop typing after 2 seconds of no input
       typingTimeoutRef.current = setTimeout(() => {
         connection.invoke("TypingIndicator", selectedConversation.id, false);
       }, 2000);
@@ -178,17 +193,117 @@ const Chat = () => {
     return conversation.participants.find((p) => p.id !== currentUser.id);
   };
 
+  // User search
+  useEffect(() => {
+    if (userSearchQuery.length < 2) {
+      setUserSearchResults([]);
+      return;
+    }
+    const timeout = setTimeout(async () => {
+      setSearchingUsers(true);
+      try {
+        const response = await api.get(`/users/search?q=${encodeURIComponent(userSearchQuery)}`);
+        // Filter out current user
+        const filtered = response.data.filter(u => u.id !== currentUser?.id);
+        setUserSearchResults(filtered);
+      } catch (error) {
+        console.error("Failed to search users:", error);
+      } finally {
+        setSearchingUsers(false);
+      }
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [userSearchQuery, currentUser]);
+
+  const handleStartConversation = async (userId) => {
+    try {
+      const response = await api.post(`/chat/conversations/direct/${userId}`);
+      await fetchConversations();
+      setSelectedConversation(response.data);
+      fetchMessages(response.data.id);
+      setShowUserSearch(false);
+      setUserSearchQuery("");
+      setUserSearchResults([]);
+    } catch (error) {
+      console.error("Failed to start conversation:", error);
+    }
+  };
+
+  // Filter conversations
+  const filteredConversations = conversations.filter(conv => {
+    if (!conversationFilter) return true;
+    const name = conv.name?.toLowerCase() || "";
+    return name.includes(conversationFilter.toLowerCase());
+  });
+
   return (
     <div className="h-screen bg-gray-50 flex">
       {/* Sidebar - Conversations List */}
       <div className="w-full md:w-80 bg-white border-r border-gray-200 flex flex-col">
         {/* Header */}
         <div className="p-4 border-b border-gray-200">
-          <h1 className="text-xl font-bold text-gray-900">Messages</h1>
-          <div className="mt-3 relative">
+          <div className="flex items-center justify-between mb-3">
+            <h1 className="text-xl font-bold text-gray-900">Messages</h1>
+            <button
+              onClick={() => setShowUserSearch(!showUserSearch)}
+              className="p-2 rounded-full bg-[#F56B2A] text-white hover:bg-[#E35B1D] transition-colors"
+              title="Nouvelle conversation"
+            >
+              {showUserSearch ? <X size={18} /> : <Plus size={18} />}
+            </button>
+          </div>
+
+          {/* User search modal */}
+          {showUserSearch && (
+            <div className="mb-3 bg-orange-50 border border-orange-200 rounded-xl p-3">
+              <p className="text-xs font-semibold text-orange-700 mb-2 flex items-center gap-1">
+                <UserPlus size={14} /> Nouvelle conversation
+              </p>
+              <input
+                type="text"
+                value={userSearchQuery}
+                onChange={(e) => setUserSearchQuery(e.target.value)}
+                placeholder="Rechercher un utilisateur..."
+                className="w-full bg-white border border-orange-200 rounded-lg py-2 px-3 focus:ring-2 focus:ring-[#F56B2A] focus:border-transparent transition-all outline-none text-sm"
+                autoFocus
+              />
+              {searchingUsers && (
+                <p className="text-xs text-gray-500 mt-2">Recherche...</p>
+              )}
+              {userSearchResults.length > 0 && (
+                <div className="mt-2 max-h-48 overflow-y-auto space-y-1">
+                  {userSearchResults.map(user => (
+                    <button
+                      key={user.id}
+                      onClick={() => handleStartConversation(user.id)}
+                      className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-orange-100 transition-colors text-left"
+                    >
+                      <div className="w-8 h-8 bg-[#F56B2A] rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                        {user.firstName?.[0]?.toUpperCase() || "?"}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {user.firstName} {user.lastName}
+                        </p>
+                        <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+              {userSearchQuery.length >= 2 && !searchingUsers && userSearchResults.length === 0 && (
+                <p className="text-xs text-gray-500 mt-2">Aucun utilisateur trouvé</p>
+              )}
+            </div>
+          )}
+
+          {/* Conversation search */}
+          <div className="relative">
             <input
               type="text"
-              placeholder="Rechercher une conversation..."
+              value={conversationFilter}
+              onChange={(e) => setConversationFilter(e.target.value)}
+              placeholder="Filtrer les conversations..."
               className="w-full bg-gray-100 border-none rounded-lg py-2 pl-10 pr-4 focus:ring-2 focus:ring-[#F56B2A] focus:bg-white transition-all outline-none text-sm"
             />
             <Search size={18} className="absolute left-3 top-2.5 text-gray-400" />
@@ -197,21 +312,20 @@ const Chat = () => {
 
         {/* Conversations */}
         <div className="flex-1 overflow-y-auto">
-          {conversations.length === 0 ? (
+          {filteredConversations.length === 0 ? (
             <div className="p-8 text-center text-gray-500">
               <p>Aucune conversation</p>
               <p className="text-sm mt-2">Commencez à discuter avec vos camarades!</p>
             </div>
           ) : (
-            conversations.map((conv) => {
+            filteredConversations.map((conv) => {
               const otherUser = getOtherParticipant(conv);
               return (
                 <div
                   key={conv.id}
                   onClick={() => handleSelectConversation(conv)}
-                  className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${
-                    selectedConversation?.id === conv.id ? "bg-blue-50" : ""
-                  }`}
+                  className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${selectedConversation?.id === conv.id ? "bg-blue-50" : ""
+                    }`}
                 >
                   <div className="flex items-start gap-3">
                     <div className="w-12 h-12 bg-[#F56B2A] rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
@@ -284,17 +398,15 @@ const Chat = () => {
                     className={`flex ${isOwn ? "justify-end" : "justify-start"}`}
                   >
                     <div
-                      className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
-                        isOwn
+                      className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${isOwn
                           ? "bg-[#F56B2A] text-white"
                           : "bg-white text-gray-900 border border-gray-200"
-                      }`}
+                        }`}
                     >
                       <p className="text-sm break-words">{message.content}</p>
                       <p
-                        className={`text-xs mt-1 ${
-                          isOwn ? "text-orange-200" : "text-gray-500"
-                        }`}
+                        className={`text-xs mt-1 ${isOwn ? "text-orange-200" : "text-gray-500"
+                          }`}
                       >
                         {formatTime(message.createdAt)}
                       </p>

@@ -9,10 +9,12 @@ namespace campus_insider.Hubs
     public class ChatHub : Hub
     {
         private readonly ChatService _chatService;
+        private readonly NotificationService _notificationService;
 
-        public ChatHub(ChatService chatService)
+        public ChatHub(ChatService chatService, NotificationService notificationService)
         {
             _chatService = chatService;
+            _notificationService = notificationService;
         }
 
         public override async Task OnConnectedAsync()
@@ -43,6 +45,27 @@ namespace campus_insider.Hubs
                 // Broadcast to conversation group
                 await Clients.Group($"conversation-{conversationId}")
                     .SendAsync("ReceiveMessage", result.Data);
+
+                // Notify other participants about the new message
+                var recipientIds = await _chatService.GetOtherParticipantIds(conversationId, userId);
+                foreach (var recipientId in recipientIds)
+                {
+                    try
+                    {
+                        await _notificationService.CreateNotification(
+                            recipientId,
+                            "NEW_MESSAGE",
+                            "Nouveau message",
+                            $"{result.Data!.Sender.FirstName}: {(content.Length > 50 ? content[..50] + "..." : content)}",
+                            sendEmail: false,
+                            entityType: "ChatConversation",
+                            entityId: conversationId,
+                            actionUrl: $"/chat",
+                            actionText: "Voir le message"
+                        );
+                    }
+                    catch { /* Don't fail message send if notification fails */ }
+                }
             }
         }
 

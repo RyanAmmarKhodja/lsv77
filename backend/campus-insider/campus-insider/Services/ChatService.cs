@@ -176,6 +176,14 @@ namespace campus_insider.Services
             return unreadCount;
         }
 
+        public async Task<List<long>> GetOtherParticipantIds(long conversationId, long senderId)
+        {
+            return await _context.ChatParticipants
+                .Where(p => p.ConversationId == conversationId && p.UserId != senderId)
+                .Select(p => p.UserId)
+                .ToListAsync();
+        }
+
         private ChatConversationDto MapConversationToDto(ChatConversation conversation, long currentUserId)
         {
             var otherParticipant = conversation.Type == "DIRECT"
@@ -224,5 +232,17 @@ namespace campus_insider.Services
             CreatedAt = message.CreatedAt,
             EditedAt = message.EditedAt
         };
+
+        public async Task RecordPostInteraction(long postId, long userId)
+        {
+            var interaction = new PostInteraction
+            {
+                PostId = postId,
+                UserId = userId,
+                CreatedAt = DateTime.UtcNow
+            };
+            _context.PostInteractions.Add(interaction);
+            await _context.SaveChangesAsync();
+        }
     }
 }

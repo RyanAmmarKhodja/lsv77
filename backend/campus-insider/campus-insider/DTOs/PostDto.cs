@@ -14,6 +14,7 @@ namespace campus_insider.DTOs
         public PostType PostType { get; set; }
         public Category Category { get; set; }
         public bool IsActive { get; set; }
+        public int ViewCount { get; set; }
 
         public DateTime? DepartureTime { get; set; }
         public string? DepartureLocation { get; set; }

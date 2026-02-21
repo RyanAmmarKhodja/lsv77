@@ -15,6 +15,7 @@ namespace campus_insider.Data
         public DbSet<Coride> Corides { get; set; }
         public DbSet<Equipment> Equipment { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<PostInteraction> PostInteractions { get; set; }
 
         public DbSet<ChatConversation> ChatConversations { get; set; }
         public DbSet<ChatParticipant> ChatParticipants { get; set; }
@@ -144,6 +145,7 @@ namespace campus_insider.Data
                     .HasMaxLength(100)
                     .HasConversion<string>();
                 entity.Property(e => e.IsActive).HasDefaultValue(true);
+                entity.Property(e => e.ViewCount).HasDefaultValue(0);
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("NOW()");
 
                 // Relationship with User
@@ -168,7 +170,31 @@ namespace campus_insider.Data
             modelBuilder.Entity<Equipment>(entity =>
             {
                 entity.Property(e => e.Location).IsRequired().HasMaxLength(200);
-               
+            });
+
+            #endregion
+
+            #region --- PostInteraction Configuration ---
+
+            modelBuilder.Entity<PostInteraction>(entity =>
+            {
+                entity.ToTable("PostInteractions");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.Property(e => e.CreatedAt).IsRequired().HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.HasOne(pi => pi.Post)
+                    .WithMany()
+                    .HasForeignKey(pi => pi.PostId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(pi => pi.User)
+                    .WithMany()
+                    .HasForeignKey(pi => pi.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(pi => pi.PostId);
+                entity.HasIndex(pi => new { pi.PostId, pi.UserId });
             });
 
             #endregion

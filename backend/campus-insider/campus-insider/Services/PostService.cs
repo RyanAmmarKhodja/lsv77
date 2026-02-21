@@ -9,11 +9,14 @@ namespace campus_insider.Services
     {
         private readonly AppDbContext _context;
         private readonly NotificationService _notificationService;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly ILogger<PostService> _logger;
 
-        public PostService(AppDbContext context, NotificationService notificationService)
+        public PostService(AppDbContext context, NotificationService notificationService, IServiceScopeFactory serviceScopeFactory, ILogger<PostService> logger)
         {
             _context = context;
             _notificationService = notificationService;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public async Task<CorideDto> CreateCorideAsync(long authorId, CreateCorideDto dto)
@@ -37,6 +40,29 @@ namespace campus_insider.Services
             _context.Corides.Add(coride);
             await _context.SaveChangesAsync();
 
+            var corideId = coride.Id;
+            var corideTitle = coride.Title;
+
+            // Notify all users about the new post
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    using var scope = _serviceScopeFactory.CreateScope();
+                    var notificationService = scope.ServiceProvider.GetRequiredService<NotificationService>();
+
+                    await _notificationService.BroadcastNotificationToAllUsers(
+                        "NEW_POST",
+                        "Nouvelle annonce",
+                        $"Nouvelle annonce covoiturage : {coride.Title}",
+                        sendEmail: false,
+                        actionUrl: $"/post/{coride.Id}",
+                        actionText: "Voir l'annonce"
+                    );
+                }
+                catch { /* Fire and forget */ }
+            });
+
             return await MapToCorideDto(coride);
         }
 
@@ -50,12 +76,36 @@ namespace campus_insider.Services
                 Location = dto.Location,
                 Category = dto.Category,
                 PostType = dto.PostType,
+                ImageUrl = dto.ImageUrl,
                 CreatedAt = DateTime.UtcNow,
                 IsActive = true
             };
 
             _context.Equipment.Add(equipment);
             await _context.SaveChangesAsync();
+
+            var equipmentId = equipment.Id;
+            var equipmentTitle = equipment.Title;
+
+            // Notify all users about the new post
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    using var scope = _serviceScopeFactory.CreateScope();
+                    var notificationService = scope.ServiceProvider.GetRequiredService<NotificationService>();
+
+                    await _notificationService.BroadcastNotificationToAllUsers(
+                        "NEW_POST",
+                        "Nouvelle annonce",
+                        $"Nouvelle annonce : {equipment.Title}",
+                        sendEmail: false,
+                        actionUrl: $"/post/{equipment.Id}",
+                        actionText: "Voir l'annonce"
+                    );
+                }
+                catch (Exception ex){ _logger.LogError(ex, "Failed to broadcast notification for equipment {EquipmentId}", equipmentId); }
+            });
 
             return await MapToEquipmentDto(equipment);
         }
@@ -67,6 +117,10 @@ namespace campus_insider.Services
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (post == null) return null;
+
+            // Increment view count
+            post.ViewCount++;
+            await _context.SaveChangesAsync();
 
             return post switch
             {
@@ -124,6 +178,7 @@ namespace campus_insider.Services
                 Title = coride.Title,
                 Content = coride.Content,
                 IsActive = coride.IsActive,
+                ViewCount = coride.ViewCount,
                 CreatedAt = coride.CreatedAt,
                 PostType = coride.PostType,
                 Category = coride.Category,
@@ -157,7 +212,9 @@ namespace campus_insider.Services
                 } : null,
                 Title = equipment.Title,
                 Content = equipment.Content,
+                ImageUrl = equipment.ImageUrl,
                 IsActive = equipment.IsActive,
+                ViewCount = equipment.ViewCount,
                 CreatedAt = equipment.CreatedAt,
                 Category = equipment.Category,
                 PostType = equipment.PostType,

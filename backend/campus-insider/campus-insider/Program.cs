@@ -106,6 +106,7 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddSignalR();
 builder.Services.AddScoped<NotificationService>();
+builder.Services.AddScoped<StatsService>();
 
 // CORS Configuration
 builder.Services.AddCors(options =>
