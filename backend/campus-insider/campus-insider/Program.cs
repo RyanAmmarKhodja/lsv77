@@ -71,7 +71,7 @@ builder.Services.AddRateLimiter(options =>
         partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? httpContext.Request.Headers.Host.ToString(),
         factory: partition => new FixedWindowRateLimiterOptions
         {
-            PermitLimit = 100,
+            PermitLimit = 1000,
             Window = TimeSpan.FromMinutes(1)
         }));
 });

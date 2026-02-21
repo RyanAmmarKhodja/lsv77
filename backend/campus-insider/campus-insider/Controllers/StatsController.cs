@@ -12,7 +12,7 @@ namespace campus_insider.Controllers
     public class StatsController : ControllerBase
     {
         private readonly StatsService _statsService;
-        private const long AdminUserId = 13;
+        private const long AdminUserId = 15;
 
         public StatsController(StatsService statsService)
         {
@@ -26,13 +26,12 @@ namespace campus_insider.Controllers
         }
 
         // GET /api/stats/dashboard
+        [Authorize(Roles="ADMIN")]
+
         [HttpGet("dashboard")]
         public async Task<ActionResult<DashboardStatsDto>> GetDashboardStats()
         {
             var userId = GetCurrentUserId();
-            if (userId != AdminUserId)
-                return Forbid();
-
             var stats = await _statsService.GetDashboardStatsAsync();
             return Ok(stats);
         }

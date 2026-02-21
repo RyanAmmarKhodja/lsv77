@@ -155,7 +155,7 @@ const AuthPage = () => {
           {/* Email Field */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1 ml-1">
-              Adresse Email (@lycee-rene-cassin.fr)
+              Adresse Email (@lsv77.fr)
             </label>
             <div className="relative">
               <Mail className="absolute left-3 top-3 text-gray-400" size={18} />
@@ -164,7 +164,7 @@ const AuthPage = () => {
                 onChange={handleChange}
                 type="Email"
                 name="Email"
-                placeholder="nom@lycee-rene-cassin.fr"
+                placeholder="nom@lsv77.fr"
                 className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#F56B2A] focus:border-transparent outline-none transition-all"
               />
             </div>

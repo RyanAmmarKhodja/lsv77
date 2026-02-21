@@ -50,8 +50,8 @@ namespace campus_insider.Services
         public async Task<ServiceResult<UserResponseDto>> RegisterAsync(UserCreateDto dto)
         {
             // Validation 1: Email domain check
-            if (!dto.Email.EndsWith("@lycee-rene-cassin.fr"))
-                return ServiceResult<UserResponseDto>.Fail("Only school emails (@lycee-rene-cassin.fr) are permitted.");
+            if (!dto.Email.EndsWith("@lsv77.fr"))
+                return ServiceResult<UserResponseDto>.Fail("Only school emails (@lsv77.fr) are permitted.");
 
             // Validation 2: Email already exists
             if (await _context.Users.AnyAsync(u => u.Email == dto.Email))

@@ -75,11 +75,6 @@ const Statistics = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (user && user.id !== 13) {
-            navigate('/feed', { replace: true });
-            return;
-        }
-
         const fetchStats = async () => {
             try {
                 const res = await api.get('/stats/dashboard');
@@ -99,7 +94,7 @@ const Statistics = () => {
         if (user) fetchStats();
     }, [user, navigate]);
 
-    if (!user || user.id !== 13) {
+    if (!user || user.role !== "ADMIN") {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50">
                 <div className="text-center">

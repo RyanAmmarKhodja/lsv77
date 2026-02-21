@@ -29,8 +29,8 @@ namespace campus_insider.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDto login)
         {
             // Validation 1: School email domain
-            if (!login.Email.EndsWith("@lycee-rene-cassin.fr"))
-                return BadRequest(new { message = "Only school emails (@lycee-rene-cassin.fr) are permitted." });
+            if (!login.Email.EndsWith("@lsv77.fr"))
+                return BadRequest(new { message = "Only school emails (@lsv77.fr) are permitted." });
 
             // Validation 2: Authenticate user
             var result = await _userService.ValidateLoginAsync(login);

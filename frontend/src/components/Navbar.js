@@ -13,6 +13,7 @@ import {
   User,
   LogOut,
   X,
+  ChartNoAxesCombined,
 } from "lucide-react";
 
 const Navbar = () => {
@@ -45,6 +46,21 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+  const fetchUser = async () => {
+    try {
+      // 1. Remove .then() and use direct assignment
+      const data = await api.get("/users/me");
+      
+      // 2. Set user based on your API response structure
+      setUser(data.data);
+    } catch (err) {
+      console.error("Error fetching user profile:", err);
+    }
+  };
+
+  fetchUser();
+}, [auth.token]); // Re-run if token changes (e.g., after login/logout)
   // Fetch notifications
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -68,8 +84,12 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUnreadCount = async () => {
       try {
-        const response = await api.get("/notifications/unread-count").then(res=>{setUnreadCount(res.data.count || 0)})
-      }catch (error) {
+        const response = await api
+          .get("/notifications/unread-count")
+          .then((res) => {
+            setUnreadCount(res.data.count || 0);
+          });
+      } catch (error) {
         console.error("Failed to fetch unread count:", error);
       }
     };
@@ -126,7 +146,7 @@ const Navbar = () => {
             </NavLink>
           </div>
 
-          {/* 2. Search Bar */}
+          {/* 2. Search Bar
           <div className="hidden md:flex flex-1 max-w-md relative">
             <input
               type="text"
@@ -136,7 +156,7 @@ const Navbar = () => {
             <div className="absolute right-3 top-2.5 text-gray-500">
               <Search size={18} />
             </div>
-          </div>
+          </div> */}
 
           {/* 3. Navigation Links */}
           <div className="hidden lg:flex items-center space-x-1">
@@ -150,6 +170,15 @@ const Navbar = () => {
                 label="Messages"
               />
             </NavLink>
+
+            {user?.role === "ADMIN" && (
+              <NavLink to="/statistics">
+                <NavLinkItem
+                  icon={<ChartNoAxesCombined size={20} />}
+                  label="Statistics"
+                />
+              </NavLink>
+            )}
 
             {/* Notifications Dropdown */}
             <div className="relative" ref={notificationRef}>
@@ -278,17 +307,6 @@ const Navbar = () => {
                     </p>
                     <p className="text-sm text-gray-500">{user?.email}</p>
                   </div>
-
-                  <button
-                    onClick={() => {
-                      navigate("/profile");
-                      setShowProfile(false);
-                    }}
-                    className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-2 text-gray-700"
-                  >
-                    <User size={18} />
-                    <span>Mon profil</span>
-                  </button>
 
                   <button
                     onClick={() => {
