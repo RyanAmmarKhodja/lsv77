@@ -57,24 +57,24 @@ builder.Services.AddScoped<ImageService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<ChatService>();
-//builder.Services.AddRateLimiter(options =>
-//{
-//    options.AddFixedWindowLimiter("login-policy", opt =>
-//    {
-//        opt.PermitLimit = 3;
-//        opt.Window = TimeSpan.FromMinutes(15);
-//        opt.QueueLimit = 0;
-//    }).RejectionStatusCode = 429;
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("login-policy", opt =>
+    {
+        opt.PermitLimit = 3;
+        opt.Window = TimeSpan.FromMinutes(15);
+        opt.QueueLimit = 0;
+    }).RejectionStatusCode = 429;
 
-//    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
-//    RateLimitPartition.GetFixedWindowLimiter(
-//        partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? httpContext.Request.Headers.Host.ToString(),
-//        factory: partition => new FixedWindowRateLimiterOptions
-//        {
-//            PermitLimit = 3,
-//            Window = TimeSpan.FromMinutes(15)
-//        }));
-//});
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+    RateLimitPartition.GetFixedWindowLimiter(
+        partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? httpContext.Request.Headers.Host.ToString(),
+        factory: partition => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 100,
+            Window = TimeSpan.FromMinutes(1)
+        }));
+});
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -115,7 +115,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins("http://localhost:3000") 
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod().AllowCredentials();
     });
 });
 
@@ -136,11 +136,12 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 
 app.UseRouting();
-app.UseCors("AllowReactApp"); 
-//app.UseRateLimiter();
+app.UseCors("AllowReactApp");
+
+app.UseRateLimiter();
+
 app.UseAuthorization();
 app.MapHub<NotificationHub>("/hubs/notifications");
 app.MapHub<ChatHub>("/hubs/chat");

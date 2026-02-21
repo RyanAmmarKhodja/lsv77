@@ -27,26 +27,27 @@ namespace campus_insider.Services
 
             // Confirmed rides: post interactions on COVOITURAGE posts
             stats.TotalRidesConfirmed = await _context.PostInteractions
-                .Include(pi => pi.Post)
                 .CountAsync(pi => pi.Post.Category == Category.COVOITURAGE);
 
             // Equipment loaned: post interactions on non-COVOITURAGE posts
             stats.TotalEquipmentLoaned = await _context.PostInteractions
-                .Include(pi => pi.Post)
                 .CountAsync(pi => pi.Post.Category != Category.COVOITURAGE);
 
-            // Category distribution
-            stats.CategoryDistribution = await _context.Posts
+            // Category distribution (Fetch raw data then format in memory)
+            var categoryData = await _context.Posts
                 .GroupBy(p => p.Category)
-                .Select(g => new CategoryStatDto
-                {
-                    Category = g.Key.ToString(),
-                    Count = g.Count()
-                })
+                .Select(g => new { Category = g.Key, Count = g.Count() })
                 .ToListAsync();
+
+            stats.CategoryDistribution = categoryData.Select(c => new CategoryStatDto
+            {
+                Category = c.Category.ToString(),
+                Count = c.Count
+            }).ToList();
 
             // Most viewed posts (top 10)
             stats.MostViewedPosts = await _context.Posts
+                .AsNoTracking()
                 .Include(p => p.Author)
                 .Where(p => p.ViewCount > 0)
                 .OrderByDescending(p => p.ViewCount)
@@ -62,18 +63,25 @@ namespace campus_insider.Services
                 })
                 .ToListAsync();
 
-            // Posts per day (last 30 days)
-            var thirtyDaysAgo = DateTime.UtcNow.AddDays(-30);
-            stats.PostsPerDay = await _context.Posts
+            // Posts per day (last 30 days) - Fixed for SQL Translation
+            var thirtyDaysAgo = DateTime.UtcNow.Date.AddDays(-30);
+
+            var dailyData = await _context.Posts
                 .Where(p => p.CreatedAt >= thirtyDaysAgo)
                 .GroupBy(p => p.CreatedAt.Date)
-                .Select(g => new DailyStatDto
+                .Select(g => new
                 {
-                    Date = g.Key.ToString("yyyy-MM-dd"),
+                    Date = g.Key,
                     Count = g.Count()
                 })
                 .OrderBy(d => d.Date)
                 .ToListAsync();
+
+            stats.PostsPerDay = dailyData.Select(d => new DailyStatDto
+            {
+                Date = d.Date.ToString("yyyy-MM-dd"),
+                Count = d.Count
+            }).ToList();
 
             return stats;
         }

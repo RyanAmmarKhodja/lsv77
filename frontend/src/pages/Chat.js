@@ -163,19 +163,6 @@ const Chat = () => {
     }
   };
 
-  const handleTyping = () => {
-    if (connection && selectedConversation) {
-      connection.invoke("TypingIndicator", selectedConversation.id, true);
-
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
-      }
-
-      typingTimeoutRef.current = setTimeout(() => {
-        connection.invoke("TypingIndicator", selectedConversation.id, false);
-      }, 2000);
-    }
-  };
 
   const scrollToBottom = () => {
     setTimeout(() => {
@@ -425,7 +412,7 @@ const Chat = () => {
                   value={messageInput}
                   onChange={(e) => {
                     setMessageInput(e.target.value);
-                    handleTyping();
+                  
                   }}
                   onKeyPress={(e) => {
                     if (e.key === "Enter" && !e.shiftKey) {

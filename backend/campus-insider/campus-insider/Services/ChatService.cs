@@ -130,6 +130,7 @@ namespace campus_insider.Services
                 .Include(c => c.Participants)
                 .ThenInclude(p => p.User)
                 .Include(c => c.Messages.OrderByDescending(m => m.CreatedAt).Take(1))
+                .ThenInclude(m => m.Sender)
                 .Where(c => c.Participants.Any(p => p.UserId == userId))
                 .OrderByDescending(c => c.LastMessageAt ?? c.CreatedAt)
                 .ToListAsync();
@@ -219,7 +220,7 @@ namespace campus_insider.Services
             Id = message.Id,
             ConversationId = message.ConversationId,
             Content = message.Content,
-            Sender = new UserResponseDto
+            Sender =  new UserResponseDto
             {
                 Id = message.Sender.Id,
                 FirstName = message.Sender.FirstName,
