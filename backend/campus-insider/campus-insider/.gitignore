@@ -1,0 +1,11 @@
+bin/
+obj/
+*.db
+*.db-shm
+*.db-wal
+appsettings.Development.json
+appsettings.Production.json
+*.user
+.vs/
+.vscode/
+Properties/launchSettings.json

@@ -36,6 +36,12 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5001";
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(int.Parse(port));
+});
+
 builder.Services.AddAuthorization();
 
 
@@ -113,18 +119,33 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
     {
-        policy.WithOrigins("http://localhost:3000") 
+        policy.WithOrigins("http://localhost:3000", "https://your-frontend.vercel.app") 
               .AllowAnyHeader()
               .AllowAnyMethod().AllowCredentials();
     });
 });
 
 var app = builder.Build();
+app.UseCors("AllowFrontend");
 // 2. Enable Middleware (Order matters!)
 app.UseAuthentication();
 app.UseStaticFiles();
 app.UseSwagger();
 app.UseSwaggerUI();
+
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        db.Database.Migrate();
+        Console.WriteLine("Database migrated successfully!");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Migration failed: {ex.Message}");
+    }
+}
 
 
 // Configure the HTTP request pipeline.
@@ -139,7 +160,7 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 app.UseCors("AllowReactApp");
-
+app.UseHttpsRedirection();
 app.UseRateLimiter();
 
 app.UseAuthorization();
