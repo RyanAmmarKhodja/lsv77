@@ -1,6 +1,6 @@
-# Campus Insider API
+# lsv77
 
-A modern ASP.NET Core 8 REST API powering a campus-focused social platform enabling students to share resources, coordinate rides, and communicate in real-time.
+A modern web application: a campus-focused social platform enabling students to share resources, coordinate rides, and communicate in real-time.
 
 ## Features
 
@@ -24,6 +24,7 @@ A modern ASP.NET Core 8 REST API powering a campus-focused social platform enabl
 - **ImageSharp** - Image processing
 - **MailKit** - Email functionality
 - **Swashbuckle** - API documentation
+- **React** - Frontend
 
 ## Prerequisites
 
