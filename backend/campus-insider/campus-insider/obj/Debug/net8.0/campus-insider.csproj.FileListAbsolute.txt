@@ -134,3 +134,4 @@ C:\Projects\campus-insider\backend\campus-insider\campus-insider\bin\Debug\net8.
 C:\Projects\campus-insider\backend\campus-insider\campus-insider\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\Projects\campus-insider\backend\campus-insider\campus-insider\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\Projects\campus-insider\backend\campus-insider\campus-insider\bin\Debug\net8.0\appsettings.Production.json
+C:\Projects\campus-insider\backend\campus-insider\campus-insider\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

@@ -44,24 +44,21 @@ namespace campus_insider.Services
             var corideTitle = coride.Title;
 
             // Notify all users about the new post
-            _ = Task.Run(async () =>
+            try
             {
-                try
-                {
-                    using var scope = _serviceScopeFactory.CreateScope();
-                    var notificationService = scope.ServiceProvider.GetRequiredService<NotificationService>();
-
-                    await _notificationService.BroadcastNotificationToAllUsers(
-                        "NEW_POST",
-                        "Nouvelle annonce",
-                        $"Nouvelle annonce covoiturage : {coride.Title}",
-                        sendEmail: false,
-                        actionUrl: $"/post/{coride.Id}",
-                        actionText: "Voir l'annonce"
-                    );
-                }
-                catch { /* Fire and forget */ }
-            });
+                await _notificationService.BroadcastNotificationToAllUsers(
+                    "NEW_POST",
+                    "Nouvelle annonce",
+                    $"Nouvelle annonce covoiturage : {coride.Title}",
+                    sendEmail: false,
+                    actionUrl: $"/post/{coride.Id}",
+                    actionText: "Voir l'annonce"
+                );
+            }
+            catch
+            {
+                // Log error if needed, but allow the method to return the DTO
+            }
 
             return await MapToCorideDto(coride);
         }
@@ -87,25 +84,21 @@ namespace campus_insider.Services
             var equipmentId = equipment.Id;
             var equipmentTitle = equipment.Title;
 
-            // Notify all users about the new post
-            _ = Task.Run(async () =>
-            {
-                try
-                {
-                    using var scope = _serviceScopeFactory.CreateScope();
-                    var notificationService = scope.ServiceProvider.GetRequiredService<NotificationService>();
 
-                    await _notificationService.BroadcastNotificationToAllUsers(
-                        "NEW_POST",
-                        "Nouvelle annonce",
-                        $"Nouvelle annonce : {equipment.Title}",
-                        sendEmail: false,
-                        actionUrl: $"/post/{equipment.Id}",
-                        actionText: "Voir l'annonce"
-                    );
-                }
-                catch (Exception ex){ _logger.LogError(ex, "Failed to broadcast notification for equipment {EquipmentId}", equipmentId); }
-            });
+            try
+            {
+
+                await _notificationService.BroadcastNotificationToAllUsers(
+                    "NEW_POST",
+                    "Nouvelle annonce",
+                    $"Nouvelle annonce : {equipment.Title}",
+                    sendEmail: false,
+                    actionUrl: $"/post/{equipment.Id}",
+                    actionText: "Voir l'annonce"
+                );
+            }
+            catch (Exception ex) { _logger.LogError(ex, "Failed to broadcast notification for equipment {EquipmentId}", equipmentId); }
+
 
             return await MapToEquipmentDto(equipment);
         }
