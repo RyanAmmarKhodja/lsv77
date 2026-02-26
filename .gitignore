@@ -17,6 +17,7 @@ Thumbs.db
 # Ignore secrets and environment-specific configs
 **/appsettings.Development.json
 **/appsettings.Production.json
+**/appsettings.json
 **/launchSettings.json
 *.user
 
