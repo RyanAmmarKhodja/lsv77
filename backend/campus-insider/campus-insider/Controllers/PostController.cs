@@ -14,9 +14,10 @@ namespace campus_insider.Controllers
         private readonly IPostService _postService;
         private readonly ImageService _imageService;
 
-        public PostController(IPostService postService, ImageService imageService) {
-             _postService = postService;
-             _imageService = imageService;
+        public PostController(IPostService postService, ImageService imageService)
+        {
+            _postService = postService;
+            _imageService = imageService;
         }
 
         private long GetCurrentUserId()
@@ -58,7 +59,7 @@ namespace campus_insider.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var authorId = GetCurrentUserId(); 
+            var authorId = GetCurrentUserId();
 
             var equipment = await _postService.CreateEquipmentAsync(authorId, dto);
             return CreatedAtAction(nameof(GetPost), new { id = equipment.Id }, equipment);

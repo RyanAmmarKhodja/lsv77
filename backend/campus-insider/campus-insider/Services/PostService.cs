@@ -9,14 +9,12 @@ namespace campus_insider.Services
     {
         private readonly AppDbContext _context;
         private readonly NotificationService _notificationService;
-        private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly ILogger<PostService> _logger;
 
-        public PostService(AppDbContext context, NotificationService notificationService, IServiceScopeFactory serviceScopeFactory, ILogger<PostService> logger)
+        public PostService(AppDbContext context, NotificationService notificationService, ILogger<PostService> logger)
         {
             _context = context;
             _notificationService = notificationService;
-            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public async Task<CorideDto> CreateCorideAsync(long authorId, CreateCorideDto dto)
