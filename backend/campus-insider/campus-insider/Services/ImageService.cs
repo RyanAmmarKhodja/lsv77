@@ -15,9 +15,9 @@ namespace campus_insider.Services
         public ImageService(IConfiguration configuration)
         {
             var acc = new Account(
-                configuration["CloudinarySettings:CloudName"],
-                configuration["CloudinarySettings:ApiKey"],
-                configuration["CloudinarySettings:ApiSecret"]
+                configuration["Cloudinary:CloudName"],
+                configuration["Cloudinary:ApiKey"],
+                configuration["Cloudinary:ApiSecret"]
             );
             _cloudinary = new Cloudinary(acc);
             _cloudinary.Api.Secure = true;
