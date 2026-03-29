@@ -79,10 +79,8 @@ const AuthPage = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#F4F6F7] px-4 font-sans">
       {/* 1. Header/Logo Area */}
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-black text-[#0A66C2] tracking-tighter mb-2">
-          PartaCov
-        </h1>
+      <div className="mb-8 text-center ">
+        <img src="logo.jpeg" alt="" srcset="" style={{height:"50px"}}/>
         <p className="text-gray-600 text-sm">
           {isLogin
             ? "Bonjour ! Connectez-vous pour voir vos annonces."
