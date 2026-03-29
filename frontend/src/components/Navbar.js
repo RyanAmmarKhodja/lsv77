@@ -137,7 +137,7 @@ const Navbar = () => {
               to="/"
               className="text-2xl font-black text-[#0A66C2] tracking-tighter"
             >
-              PartaCov
+              <img src="logo.jpeg" style={{height:"40px"}} alt="" srcset="" />
             </NavLink>
           </div>
 

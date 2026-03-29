@@ -6,6 +6,8 @@
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public bool IsEmailVerified { get; set; } = false;
+        public string? EmailVerificationToken { get; set; }
     }
 
     public class UserResponseDto

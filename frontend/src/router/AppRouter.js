@@ -8,6 +8,7 @@ import Post from "../pages/Post";
 import CreatePost from "../pages/CreatePost";
 import Chat from "../pages/Chat";
 import Statistics from "../pages/Statistics";
+import VerifyEmail from "../pages/VerifyEmail";
 import { useState } from "react";
 
 export default function AppRouter() {
@@ -35,6 +36,7 @@ export default function AppRouter() {
       {/* 1. Public Routes (Accessible only when logged out) */}
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<AuthPage />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
       </Route>
 
 
@@ -46,6 +48,7 @@ export default function AppRouter() {
         <Route path="/create-post" element={<CreatePost />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/statistics" element={<Statistics />} />
+        
       </Route>
 
       {/* 3. Catch-all (Outside the wrappers or inside a specific one) */}

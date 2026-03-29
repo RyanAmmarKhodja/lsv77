@@ -47,7 +47,7 @@ const AuthPage = () => {
         // --- REGISTER LOGIC ---
         const response = await api.post("/users/register", formData);
 
-        setSuccess("Compte créé avec succès !");
+        setSuccess("Veuillez vérifiez votre adresse mail pour valider l'inscription.");
 
         // Switch to login view and pre-fill the email
         setIsLogin(true);

@@ -11,6 +11,9 @@
         public string Role { get; set; } = "USER";
         public DateTime CreatedAt { get; set; }
 
+        public bool IsEmailVerified { get; set; } = false;
+        public string? EmailVerificationToken { get; set; }
+
         // Navigation properties
         //public ICollection<CarpoolTrip> CarpoolTrips { get; set; } = new List<CarpoolTrip>();
         //public ICollection<Equipment> Equipment { get; set; } = new List<Equipment>();

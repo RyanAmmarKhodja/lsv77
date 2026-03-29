@@ -37,6 +37,8 @@ namespace campus_insider.Controllers
             if (!result.Success)
                 return Unauthorized(new { message = result.ErrorMessage });
 
+           
+
             var user = result.Data!;
 
             // Create JWT claims

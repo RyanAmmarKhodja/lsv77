@@ -1,9 +1,12 @@
-﻿namespace campus_insider.Services
+﻿using MailKit;
+
+namespace campus_insider.Services
 {
     public class ServiceResult<T>
     {
         public bool Success { get; init; }
         public T? Data { get; init; }
+        public string? Metadata { get; init; }
         public string? ErrorMessage { get; init; }
 
         public static ServiceResult<T> Ok(T data) => new() { Success = true, Data = data };

@@ -1,6 +1,7 @@
 ﻿using campus_insider.Data;
 using campus_insider.DTOs;
 using campus_insider.Models;
+using MailKit;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
@@ -51,7 +52,7 @@ namespace campus_insider.Services
         {
             // Validation 1: Email domain check
             if (!dto.Email.EndsWith("@lsv77.fr"))
-                return ServiceResult<UserResponseDto>.Fail("Only school emails (@lsv77.fr) are permitted.");
+               return ServiceResult<UserResponseDto>.Fail("Only school emails (@lsv77.fr) are permitted.");
 
             // Validation 2: Email already exists
             if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
@@ -61,6 +62,8 @@ namespace campus_insider.Services
             if (dto.Password.Length < 8)
                 return ServiceResult<UserResponseDto>.Fail("Password must be at least 8 characters long.");
 
+            var verificationToken = Guid.NewGuid().ToString();
+
             var user = new User
             {
                 FirstName = dto.FirstName,
@@ -68,13 +71,20 @@ namespace campus_insider.Services
                 Email = dto.Email.ToLower().Trim(), // Normalize email
                 Password = HashPassword(dto.Password),
                 Role = "USER", // Default role
+                IsEmailVerified = false,
+                EmailVerificationToken = verificationToken,
                 CreatedAt = DateTime.UtcNow
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return ServiceResult<UserResponseDto>.Ok(MapToResponseDto(user));
+            return new ServiceResult<UserResponseDto>
+            {
+                Success = true,
+                Data = MapToResponseDto(user),
+                Metadata = verificationToken // Pass the token back to the controller
+            };
         }
 
         public async Task<ServiceResult<User>> ValidateLoginAsync(LoginDto dto)
@@ -82,6 +92,11 @@ namespace campus_insider.Services
             var user = await _context.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email == dto.Email.ToLower().Trim());
+
+            if (!user.IsEmailVerified)
+            {
+                return ServiceResult<User>.Fail("Must verify email first.");
+            }
 
             if (user == null)
                 return ServiceResult<User>.Fail("Invalid email or password.");

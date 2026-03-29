@@ -39,7 +39,9 @@ builder.Services.AddAuthentication(options =>
 var port = Environment.GetEnvironmentVariable("PORT") ?? "7216";
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(int.Parse(port));
+    options.ListenAnyIP(int.Parse(port), listenOptions => {
+        listenOptions.UseHttps();
+    });
 });
 
 
@@ -69,7 +71,7 @@ builder.Services.AddRateLimiter(options =>
 {
     options.AddFixedWindowLimiter("login-policy", opt =>
     {
-        opt.PermitLimit = 3;
+        opt.PermitLimit = 100;
         opt.Window = TimeSpan.FromMinutes(15);
         opt.QueueLimit = 0;
     }).RejectionStatusCode = 429;

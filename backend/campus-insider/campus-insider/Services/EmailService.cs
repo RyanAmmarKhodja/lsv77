@@ -2,6 +2,7 @@
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace campus_insider.Services
 {
@@ -14,6 +15,25 @@ namespace campus_insider.Services
         {
             _configuration = configuration;
             _logger = logger;
+        }
+
+        public async Task SendEmailAsync(string email, string subject, string htmlMessage)
+        {
+            var settings = _configuration.GetSection("EmailSettings");
+            var message = new MimeMessage();
+
+            message.From.Add(new MailboxAddress(settings["SenderName"], settings["SenderEmail"]));
+            message.To.Add(new MailboxAddress("", email));
+            message.Subject = subject;
+
+            message.Body = new TextPart("html") { Text = htmlMessage };
+
+            using var client = new SmtpClient();
+            // Use StartTls for Port 587
+            await client.ConnectAsync(settings["SmtpServer"], int.Parse(settings["Port"]), MailKit.Security.SecureSocketOptions.StartTls);
+            await client.AuthenticateAsync(settings["Username"], settings["Password"]);
+            await client.SendAsync(message);
+            await client.DisconnectAsync(true);
         }
 
         public async Task<bool> SendNotificationEmailAsync(
