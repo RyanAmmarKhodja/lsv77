@@ -41,6 +41,8 @@ builder.Services.AddMemoryCache();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
+
 // Application Services
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IFeedService, FeedService>();
@@ -129,6 +131,25 @@ builder.Services.AddSwaggerGen(options =>
 
 // --- 8. BUILD APP ---
 var app = builder.Build();
+
+
+// --- 10. DATABASE MIGRATIONS & SEEDING ---
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        db.Database.Migrate();
+        Console.WriteLine("Database migrated successfully!");
+
+        // Add this line here
+        await DbSeeder.SeedAdminUser(app);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Startup Database Error: {ex.Message}");
+    }
+}
 
 // --- 9. MIDDLEWARE PIPELINE (Order is vital) ---
 
