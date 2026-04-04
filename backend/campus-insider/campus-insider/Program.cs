@@ -20,10 +20,20 @@ var port = Environment.GetEnvironmentVariable("PORT") ?? "7216";
 // --- 2. KESTREL CONFIGURATION ---
 builder.WebHost.ConfigureKestrel(options =>
 {
-    // Listen on the assigned port. 
-    // Removed forced .UseHttps() here because cloud providers (Render/Railway) 
-    // handle SSL termination for you. This prevents the "Dev-Cert" Segfault.
-    options.ListenAnyIP(int.Parse(port));
+    var isDevelopment = builder.Environment.IsDevelopment();
+    var portNumber = int.Parse(port);
+
+    if (isDevelopment)
+    {
+        options.ListenAnyIP(portNumber, listenOptions =>
+        {
+            listenOptions.UseHttps();
+        });
+    }
+    else
+    {
+        options.ListenAnyIP(portNumber);
+    }
 });
 
 // --- 3. CORE SERVICES (DI) ---
@@ -48,6 +58,7 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<IFeedService, FeedService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<ImageService>();
+builder.Services.AddScoped<FeedService>();
 builder.Services.AddScoped<EmailService>(); // Matches the interface we discussed
 builder.Services.AddScoped<ChatService>();
 builder.Services.AddScoped<NotificationService>();
